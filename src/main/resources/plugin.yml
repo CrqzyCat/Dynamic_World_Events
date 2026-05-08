@@ -1,6 +1,39 @@
 name: Dynamic_World_Events
 version: '${version}'
-
 main: dynamic_world_events.dynamic_World_Events.Dynamic_World_Events
-api-version: '1.21.11'
+api-version: '1.21'
 load: POSTWORLD
+description: Dynamic server-wide world events for Paper SMPs
+authors: [ YourName ]
+
+commands:
+  events:
+    description: Zeigt das aktuelle und nächste Ereignis an
+    usage: /events
+    permission: dwe.events.list
+  eventstart:
+    description: Startet ein Ereignis manuell
+    usage: /eventstart [event-id]
+    permission: dwe.admin.start
+  eventstop:
+    description: Stoppt das aktuelle Ereignis
+    usage: /eventstop
+    permission: dwe.admin.stop
+  eventreload:
+    description: Lädt die Config neu
+    usage: /eventreload
+    permission: dwe.admin.reload
+
+permissions:
+  dwe.events.list:
+    description: Event-Info anzeigen
+    default: true
+  dwe.admin.start:
+    description: Events manuell starten
+    default: op
+  dwe.admin.stop:
+    description: Events stoppen
+    default: op
+  dwe.admin.reload:
+    description: Config neu laden
+    default: op
