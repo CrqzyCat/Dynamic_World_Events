@@ -2,15 +2,21 @@ package dynamic_world_events.dynamic_World_Events.events;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.World;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 public class MeteorEvent extends WorldEvent {
 
@@ -43,9 +49,7 @@ public class MeteorEvent extends WorldEvent {
 
         world.playSound(world.getSpawnLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1f, 0.5f);
 
-        int totalDuration = getDurationSeconds();
-        int interval = Math.max(20, (totalDuration * 20) / meteorsLeft);
-
+        int interval = Math.max(20, (getDurationSeconds() * 20) / meteorsLeft);
         meteorTask = Bukkit.getScheduler().runTaskTimer(plugin, this::spawnMeteor, 60L, interval);
     }
 

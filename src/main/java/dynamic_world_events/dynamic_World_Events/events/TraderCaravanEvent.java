@@ -2,11 +2,20 @@ package dynamic_world_events.dynamic_World_Events.events;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.TraderLlama;
+import org.bukkit.entity.WanderingTrader;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class TraderCaravanEvent extends WorldEvent {
 
@@ -39,7 +48,6 @@ public class TraderCaravanEvent extends WorldEvent {
         int traderCount = plugin.getConfig().getInt("events.trader_caravan.trader-count", 3);
         spawnTraders(traderCount);
 
-        // Reminder every 60 seconds so players don't miss them
         reminderTask = Bukkit.getScheduler().runTaskTimer(plugin, () ->
             world.getPlayers().forEach(p ->
                 p.sendActionBar(ChatColor.GREEN + "🧳 Händlerkarawane ist aktiv! /events für Details")
@@ -64,10 +72,9 @@ public class TraderCaravanEvent extends WorldEvent {
             WanderingTrader trader = (WanderingTrader) world.spawnEntity(loc, EntityType.WANDERING_TRADER);
             trader.setCustomName(ChatColor.GOLD + "✦ Karawanen-Händler");
             trader.setCustomNameVisible(true);
-            trader.setAI(false); // Keep them still so players can find them
+            trader.setAI(false);
             trader.setInvulnerable(true);
 
-            // Spawn llamas too for atmosphere
             TraderLlama llama = (TraderLlama) world.spawnEntity(loc.clone().add(1, 0, 0), EntityType.TRADER_LLAMA);
             llama.setCustomName(ChatColor.GRAY + "Karawanen-Lama");
             llama.setCustomNameVisible(true);
@@ -85,7 +92,6 @@ public class TraderCaravanEvent extends WorldEvent {
             .filter(e -> e != null && !e.isDead())
             .forEach(Entity::remove);
         spawnedEntities.clear();
-
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");

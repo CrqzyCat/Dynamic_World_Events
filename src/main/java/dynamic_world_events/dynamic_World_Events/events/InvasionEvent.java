@@ -2,14 +2,26 @@ package dynamic_world_events.dynamic_World_Events.events;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class InvasionEvent extends WorldEvent {
 
@@ -104,12 +116,10 @@ public class InvasionEvent extends WorldEvent {
     public void end(boolean forced) {
         if (spawnTask != null) { spawnTask.cancel(); spawnTask = null; }
 
-        // Remove remaining alive invasion mobs
         spawnedMobs.stream()
             .filter(e -> e != null && !e.isDead())
             .forEach(Entity::remove);
         spawnedMobs.clear();
-
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");

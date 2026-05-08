@@ -2,13 +2,22 @@ package dynamic_world_events.dynamic_World_Events.events;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class TreasureHuntEvent extends WorldEvent {
 
@@ -40,7 +49,6 @@ public class TreasureHuntEvent extends WorldEvent {
         int count = plugin.getConfig().getInt("events.treasure_hunt.chest-count", 3);
         spawnChests(count);
 
-        // Hint: tell players roughly where chests are
         for (int i = 0; i < chestLocations.size(); i++) {
             Location loc = chestLocations.get(i);
             Bukkit.broadcastMessage(MessageUtil.color(prefix
@@ -76,8 +84,7 @@ public class TreasureHuntEvent extends WorldEvent {
             int offsetX = random.nextInt(101) - 50;
             int offsetZ = random.nextInt(101) - 50;
             Location loc = base.clone().add(offsetX, 0, offsetZ);
-            int y = world.getHighestBlockYAt(loc);
-            loc.setY(y);
+            loc.setY(world.getHighestBlockYAt(loc));
 
             Block block = world.getBlockAt(loc);
             block.setType(Material.CHEST);
@@ -99,7 +106,6 @@ public class TreasureHuntEvent extends WorldEvent {
 
     @Override
     public void end(boolean forced) {
-        // Remove unfound chests
         for (Location loc : chestLocations) {
             Block block = world.getBlockAt(loc);
             if (block.getType() == Material.CHEST) block.setType(Material.AIR);
