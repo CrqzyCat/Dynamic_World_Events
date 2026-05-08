@@ -1,0 +1,6 @@
+name: Dynamic_World_Events
+version: '${version}'
+
+main: dynamic_world_events.dynamic_World_Events.Dynamic_World_Events
+api-version: '1.21.11'
+load: POSTWORLD
