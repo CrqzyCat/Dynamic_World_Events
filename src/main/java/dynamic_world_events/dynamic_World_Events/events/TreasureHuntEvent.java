@@ -1,6 +1,7 @@
 package dynamic_world_events.dynamic_World_Events.events;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
+import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
