@@ -7,10 +7,6 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Random;
 
-/**
- * Automatically schedules a new random event after a configurable interval.
- * Also sends a warning broadcast X seconds before the event starts.
- */
 public class EventScheduler {
 
     private final Dynamic_World_Events plugin;
@@ -25,8 +21,6 @@ public class EventScheduler {
         this.plugin = plugin;
     }
 
-    // ── Start / Stop ──────────────────────────────────────────────────────────
-
     public void start() {
         scheduleNextEvent();
     }
@@ -36,63 +30,56 @@ public class EventScheduler {
         if (warningTask  != null) { warningTask.cancel();  warningTask  = null; }
     }
 
-    // ── Internal scheduling ───────────────────────────────────────────────────
-
     private void scheduleNextEvent() {
-        int minMinutes = plugin.getConfig().getInt("settings.min-interval-minutes", 20);
-        int maxMinutes = plugin.getConfig().getInt("settings.max-interval-minutes", 45);
+        int minMinutes  = plugin.getConfig().getInt("settings.min-interval-minutes", 20);
+        int maxMinutes  = plugin.getConfig().getInt("settings.max-interval-minutes", 45);
         int warnSeconds = plugin.getConfig().getInt("settings.warning-seconds", 30);
 
-        // Random interval between min and max
-        int intervalSeconds = (minMinutes + random.nextInt(maxMinutes - minMinutes + 1)) * 60;
-        nextEventInSeconds = intervalSeconds;
+        // Ensure max >= min to avoid nextInt(0) crash
+        int range = Math.max(1, maxMinutes - minMinutes);
+        int intervalSeconds = (minMinutes + random.nextInt(range)) * 60;
+        nextEventInSeconds  = intervalSeconds;
 
         long intervalTicks = (long) intervalSeconds * 20L;
         long warnTicks     = (long) Math.max(0, intervalSeconds - warnSeconds) * 20L;
 
-        plugin.getLogger().info("Next event in " + intervalSeconds / 60 + " min " + intervalSeconds % 60 + " sec.");
+        plugin.getLogger().info("Next event in " + intervalSeconds / 60 + "m " + intervalSeconds % 60 + "s.");
 
         // Warning broadcast
         warningTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (plugin.getEventManager().hasActiveEvent()) return;
 
-            String eventName = "???"; // will be resolved at start time
-            String raw = plugin.getConfig().getString("messages.event-warning",
-                "&eWarnung! &7Ein Ereignis beginnt in &e{seconds} Sekunden&7!");
-            String msg = raw.replace("{seconds}", String.valueOf(warnSeconds))
-                            .replace("{event}", eventName);
             String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-
-            Bukkit.broadcastMessage(MessageUtil.color(prefix + msg));
+            String raw = plugin.getConfig().getString("messages.event-warning",
+                "&eWarning! &7An event starts in &e{seconds}s&7!")
+                .replace("{seconds}", String.valueOf(warnSeconds));
+            Bukkit.broadcastMessage(MessageUtil.color(prefix + raw));
         }, warnTicks);
 
-        // Actual event trigger
+        // Event trigger
         scheduleTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             int minPlayers = plugin.getConfig().getInt("settings.min-players", 1);
             if (Bukkit.getOnlinePlayers().size() < minPlayers) {
-                // Not enough players, reschedule
-                plugin.getLogger().info("Not enough players online, rescheduling event.");
+                plugin.getLogger().info("Not enough players online, rescheduling.");
                 scheduleNextEvent();
                 return;
             }
 
+            // Only start if no event is already running
             if (!plugin.getEventManager().hasActiveEvent()) {
                 plugin.getEventManager().startRandomEvent();
             }
 
-            // Schedule the next one after the current event would end
-            int eventDuration = plugin.getEventManager().hasActiveEvent()
+            // Schedule next event after current one ends
+            int duration = plugin.getEventManager().hasActiveEvent()
                 ? plugin.getEventManager().getActiveEvent().getDurationSeconds()
                 : 120;
 
             Bukkit.getScheduler().runTaskLater(plugin, this::scheduleNextEvent,
-                (long) eventDuration * 20L + 40L); // small buffer after event ends
+                (long) duration * 20L + 60L);
 
         }, intervalTicks);
     }
 
-    // ── Getter ────────────────────────────────────────────────────────────────
-
-    /** Approximate seconds until the next event (decreases over time — not live, snapshot at scheduling). */
     public int getNextEventInSeconds() { return nextEventInSeconds; }
 }

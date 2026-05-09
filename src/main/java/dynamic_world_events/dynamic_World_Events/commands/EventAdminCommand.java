@@ -3,9 +3,13 @@ package dynamic_world_events.dynamic_World_Events.commands;
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.events.WorldEvent;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class EventAdminCommand implements CommandExecutor, TabCompleter {
@@ -24,48 +28,49 @@ public class EventAdminCommand implements CommandExecutor, TabCompleter {
 
             case "eventstart" -> {
                 if (!sender.hasPermission("dwe.admin.start")) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&cKeine Berechtigung."));
+                    sender.sendMessage(MessageUtil.color(prefix + "&cNo permission."));
                     return true;
                 }
                 if (plugin.getEventManager().hasActiveEvent()) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&cEin Ereignis läuft bereits!"));
+                    sender.sendMessage(MessageUtil.color(prefix + "&cAn event is already running!"));
                     return true;
                 }
                 if (args.length == 0) {
-                    // Start random event
                     boolean started = plugin.getEventManager().startRandomEvent();
-                    sender.sendMessage(MessageUtil.color(prefix + (started ? "&aZufälliges Ereignis gestartet!" : "&cKeine Events verfügbar.")));
+                    sender.sendMessage(MessageUtil.color(prefix + (started
+                        ? "&aRandom event started!"
+                        : "&cNo events available.")));
                 } else {
                     boolean started = plugin.getEventManager().startEventById(args[0]);
                     sender.sendMessage(MessageUtil.color(prefix + (started
-                        ? "&aEreignis &f" + args[0] + " &agestartet!"
-                        : "&cEreignis &f" + args[0] + " &cnicht gefunden oder bereits aktiv.")));
+                        ? "&aEvent &f" + args[0] + " &astarted!"
+                        : "&cEvent &f" + args[0] + " &cnot found or already active.")));
                 }
             }
 
             case "eventstop" -> {
                 if (!sender.hasPermission("dwe.admin.stop")) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&cKeine Berechtigung."));
+                    sender.sendMessage(MessageUtil.color(prefix + "&cNo permission."));
                     return true;
                 }
                 if (!plugin.getEventManager().hasActiveEvent()) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&7Kein aktives Ereignis."));
+                    sender.sendMessage(MessageUtil.color(prefix + "&7No active event."));
                     return true;
                 }
                 plugin.getEventManager().stopCurrentEvent(true);
-                sender.sendMessage(MessageUtil.color(prefix + "&aEreignis gestoppt."));
+                sender.sendMessage(MessageUtil.color(prefix + "&aEvent stopped."));
             }
 
             case "eventreload" -> {
                 if (!sender.hasPermission("dwe.admin.reload")) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&cKeine Berechtigung."));
+                    sender.sendMessage(MessageUtil.color(prefix + "&cNo permission."));
                     return true;
                 }
                 plugin.reload();
-                sender.sendMessage(MessageUtil.color(prefix + "&aConfig neu geladen!"));
+                sender.sendMessage(MessageUtil.color(prefix + "&aConfig reloaded!"));
             }
 
-            default -> sender.sendMessage(MessageUtil.color(prefix + "&cUnbekannter Befehl."));
+            default -> sender.sendMessage(MessageUtil.color(prefix + "&cUnknown command."));
         }
         return true;
     }
