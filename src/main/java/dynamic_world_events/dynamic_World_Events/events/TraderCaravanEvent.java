@@ -24,7 +24,7 @@ public class TraderCaravanEvent extends WorldEvent {
     private World world;
 
     public TraderCaravanEvent(Dynamic_World_Events plugin) {
-        super(plugin, "trader_caravan", "🧳 Händlerkarawane");
+        super(plugin, "trader_caravan", "Trader Caravan");
     }
 
     @Override
@@ -33,14 +33,14 @@ public class TraderCaravanEvent extends WorldEvent {
         this.active = true;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEreignis gestartet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEvent started: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
-        Bukkit.broadcastMessage(MessageUtil.color(prefix + "&7Seltene Händler sind erschienen — findet sie!"));
+        Bukkit.broadcastMessage(MessageUtil.color(prefix + "&7Rare traders have appeared - find them!"));
 
         world.getPlayers().forEach(p ->
             p.sendTitle(
-                ChatColor.GREEN + "" + ChatColor.BOLD + "🧳 Händlerkarawane!",
-                ChatColor.YELLOW + "Seltene Waren verfügbar!",
+                ChatColor.GREEN + "" + ChatColor.BOLD + "Trader Caravan!",
+                ChatColor.YELLOW + "Rare goods available!",
                 10, 70, 20
             )
         );
@@ -50,7 +50,7 @@ public class TraderCaravanEvent extends WorldEvent {
 
         reminderTask = Bukkit.getScheduler().runTaskTimer(plugin, () ->
             world.getPlayers().forEach(p ->
-                p.sendActionBar(ChatColor.GREEN + "🧳 Händlerkarawane ist aktiv! /events für Details")
+                p.sendActionBar(ChatColor.GREEN + "Trader Caravan active! Use /events")
             ), 60 * 20L, 60 * 20L
         );
     }
@@ -70,13 +70,13 @@ public class TraderCaravanEvent extends WorldEvent {
             loc.setY(world.getHighestBlockYAt(loc) + 1);
 
             WanderingTrader trader = (WanderingTrader) world.spawnEntity(loc, EntityType.WANDERING_TRADER);
-            trader.setCustomName(ChatColor.GOLD + "✦ Karawanen-Händler");
+            trader.setCustomName(ChatColor.GOLD + "Caravan Trader");
             trader.setCustomNameVisible(true);
             trader.setAI(false);
             trader.setInvulnerable(true);
 
             TraderLlama llama = (TraderLlama) world.spawnEntity(loc.clone().add(1, 0, 0), EntityType.TRADER_LLAMA);
-            llama.setCustomName(ChatColor.GRAY + "Karawanen-Lama");
+            llama.setCustomName(ChatColor.GRAY + "Caravan Llama");
             llama.setCustomNameVisible(true);
 
             spawnedEntities.add(trader);
@@ -95,7 +95,7 @@ public class TraderCaravanEvent extends WorldEvent {
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-end", "&aEreignis beendet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-end", "&aEvent ended: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
     }
 
@@ -103,7 +103,7 @@ public class TraderCaravanEvent extends WorldEvent {
     public void onTick(int secondsRemaining) {
         if (secondsRemaining == 60) {
             String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-            Bukkit.broadcastMessage(MessageUtil.color(prefix + "&eHändlerkarawane verlässt das Gebiet in &61 Minute&e!"));
+            Bukkit.broadcastMessage(MessageUtil.color(prefix + "&eCaravan leaves in &61 minute&e!"));
         }
     }
 }

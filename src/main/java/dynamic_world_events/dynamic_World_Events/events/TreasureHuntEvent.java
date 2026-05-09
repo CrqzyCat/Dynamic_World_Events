@@ -25,7 +25,7 @@ public class TreasureHuntEvent extends WorldEvent {
     private World world;
 
     public TreasureHuntEvent(Dynamic_World_Events plugin) {
-        super(plugin, "treasure_hunt", "💎 Schatzsuche");
+        super(plugin, "treasure_hunt", "Treasure Hunt");
     }
 
     @Override
@@ -34,14 +34,14 @@ public class TreasureHuntEvent extends WorldEvent {
         this.active = true;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEreignis gestartet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEvent started: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
-        Bukkit.broadcastMessage(MessageUtil.color(prefix + "&7Schatzkisten wurden in der Welt versteckt. Sucht sie!"));
+        Bukkit.broadcastMessage(MessageUtil.color(prefix + "&7Treasure chests have been hidden. Find them!"));
 
         world.getPlayers().forEach(p ->
             p.sendTitle(
-                ChatColor.AQUA + "" + ChatColor.BOLD + "💎 Schatzsuche!",
-                ChatColor.YELLOW + "Findet die versteckten Kisten!",
+                ChatColor.AQUA + "" + ChatColor.BOLD + "Treasure Hunt!",
+                ChatColor.YELLOW + "Find the hidden chests!",
                 10, 70, 20
             )
         );
@@ -52,7 +52,7 @@ public class TreasureHuntEvent extends WorldEvent {
         for (int i = 0; i < chestLocations.size(); i++) {
             Location loc = chestLocations.get(i);
             Bukkit.broadcastMessage(MessageUtil.color(prefix
-                + "&7Kiste #" + (i + 1) + " in der Nähe von &e"
+                + "&7Chest #" + (i + 1) + " near &e"
                 + loc.getBlockX() + ", " + loc.getBlockZ()));
         }
     }
@@ -114,7 +114,7 @@ public class TreasureHuntEvent extends WorldEvent {
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-end", "&aEreignis beendet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-end", "&aEvent ended: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
     }
 
@@ -122,7 +122,7 @@ public class TreasureHuntEvent extends WorldEvent {
     public void onTick(int secondsRemaining) {
         if (secondsRemaining == 60) {
             String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-            Bukkit.broadcastMessage(MessageUtil.color(prefix + "&eSchatzkisten verschwinden in &61 Minute&e!"));
+            Bukkit.broadcastMessage(MessageUtil.color(prefix + "&eTreasure chests disappear in &61 minute&e!"));
         }
     }
 }

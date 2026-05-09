@@ -13,7 +13,7 @@ public class DroughtEvent extends WorldEvent {
     private BukkitTask weatherTask;
 
     public DroughtEvent(Dynamic_World_Events plugin) {
-        super(plugin, "drought", "☀ Dürre");
+        super(plugin, "drought", "Drought");
     }
 
     @Override
@@ -22,14 +22,14 @@ public class DroughtEvent extends WorldEvent {
         this.active = true;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEreignis gestartet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEvent started: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
-        Bukkit.broadcastMessage(MessageUtil.color(prefix + "&7Die Hitze trocknet die Felder aus. Sichert eure Ernte!"));
+        Bukkit.broadcastMessage(MessageUtil.color(prefix + "&7The heat is drying out the fields. Protect your crops!"));
 
         world.getPlayers().forEach(p ->
             p.sendTitle(
-                ChatColor.YELLOW + "" + ChatColor.BOLD + "☀ Dürre!",
-                ChatColor.GOLD + "Die Felder verdorren...",
+                ChatColor.YELLOW + "" + ChatColor.BOLD + "Drought!",
+                ChatColor.GOLD + "The fields are withering...",
                 10, 70, 20
             )
         );
@@ -52,7 +52,7 @@ public class DroughtEvent extends WorldEvent {
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-end", "&aEreignis beendet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-end", "&aEvent ended: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
     }
 
@@ -60,7 +60,7 @@ public class DroughtEvent extends WorldEvent {
     public void onTick(int secondsRemaining) {
         if (secondsRemaining == 60) {
             String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-            Bukkit.broadcastMessage(MessageUtil.color(prefix + "&eDie Dürre endet in &61 Minute&e."));
+            Bukkit.broadcastMessage(MessageUtil.color(prefix + "&eDrought ends in &61 minute&e."));
         }
     }
 }

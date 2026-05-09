@@ -3,13 +3,9 @@
 # ==========================================
 
 settings:
-  # Mindestminuten zwischen Events
   min-interval-minutes: 20
-  # Maximalminuten zwischen Events
   max-interval-minutes: 45
-  # Mindestanzahl Online-Spieler für einen Event-Start
   min-players: 1
-  # Vorwarnung X Sekunden vor dem Event
   warning-seconds: 30
 
 events:
@@ -55,8 +51,8 @@ events:
 
 messages:
   prefix: "&8[&6DWE&8] &r"
-  event-warning: "&eWarnung! &7Ein Ereignis beginnt in &e{seconds} Sekunden&7!"
-  event-start: "&6&lEreignis gestartet: &f{event}"
-  event-end: "&aEreignis beendet: &f{event}"
-  no-active-event: "&7Aktuell kein aktives Ereignis."
-  next-event: "&7Nächstes Ereignis in ca. &e{minutes} Minuten&7."
+  event-warning: "&eWarning! &7An event starts in &e{seconds}s&7!"
+  event-start: "&6&lEvent started: &f{event}"
+  event-end: "&aEvent ended: &f{event}"
+  no-active-event: "&7No active event right now."
+  next-event: "&7Next event in approx. &e{minutes} min&7."

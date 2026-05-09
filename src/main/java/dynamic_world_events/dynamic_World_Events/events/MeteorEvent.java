@@ -26,7 +26,7 @@ public class MeteorEvent extends WorldEvent {
     private int meteorsLeft;
 
     public MeteorEvent(Dynamic_World_Events plugin) {
-        super(plugin, "meteor", "☄ Meteoritenschauer");
+        super(plugin, "meteor", "Meteor Shower");
     }
 
     @Override
@@ -36,13 +36,13 @@ public class MeteorEvent extends WorldEvent {
         this.meteorsLeft = plugin.getConfig().getInt("events.meteor.meteor-count", 5);
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEreignis gestartet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEvent started: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
 
         world.getPlayers().forEach(p ->
             p.sendTitle(
-                ChatColor.GOLD + "" + ChatColor.BOLD + "☄ Meteoritenschauer!",
-                ChatColor.YELLOW + "Suche Deckung!",
+                ChatColor.GOLD + "" + ChatColor.BOLD + "Meteor Shower!",
+                ChatColor.YELLOW + "Take cover!",
                 10, 60, 20
             )
         );
@@ -89,7 +89,7 @@ public class MeteorEvent extends WorldEvent {
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-end", "&aEreignis beendet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-end", "&aEvent ended: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
     }
 
@@ -97,7 +97,7 @@ public class MeteorEvent extends WorldEvent {
     public void onTick(int secondsRemaining) {
         if (secondsRemaining == 10) {
             world.getPlayers().forEach(p ->
-                p.sendActionBar(ChatColor.RED + "☄ Meteoritenschauer endet in 10 Sekunden!")
+                p.sendActionBar(ChatColor.RED + "Meteor Shower ends in 10s!")
             );
         }
     }

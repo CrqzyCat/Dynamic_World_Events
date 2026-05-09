@@ -32,7 +32,7 @@ public class InvasionEvent extends WorldEvent {
     private int mobsLeft;
 
     public InvasionEvent(Dynamic_World_Events plugin) {
-        super(plugin, "invasion", "⚔ Mob-Invasion");
+        super(plugin, "invasion", "Mob Invasion");
     }
 
     @Override
@@ -42,13 +42,13 @@ public class InvasionEvent extends WorldEvent {
         this.mobsLeft = plugin.getConfig().getInt("events.invasion.mob-count", 15);
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEreignis gestartet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-start", "&6&lEvent started: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
 
         world.getPlayers().forEach(p ->
             p.sendTitle(
-                ChatColor.RED + "" + ChatColor.BOLD + "⚔ Mob-Invasion!",
-                ChatColor.YELLOW + "Kämpft zusammen!",
+                ChatColor.RED + "" + ChatColor.BOLD + "Mob Invasion!",
+                ChatColor.YELLOW + "Fight together!",
                 10, 70, 20
             )
         );
@@ -82,7 +82,7 @@ public class InvasionEvent extends WorldEvent {
         catch (IllegalArgumentException e) { type = EntityType.ZOMBIE; }
 
         LivingEntity mob = (LivingEntity) world.spawnEntity(spawnLoc, type);
-        mob.setCustomName(ChatColor.RED + "☠ Invasor");
+        mob.setCustomName(ChatColor.RED + "Invader");
         mob.setCustomNameVisible(true);
 
         boolean giveArmor   = plugin.getConfig().getBoolean("events.invasion.give-armor", true);
@@ -123,7 +123,7 @@ public class InvasionEvent extends WorldEvent {
         this.active = false;
 
         String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
-        String raw    = plugin.getConfig().getString("messages.event-end", "&aEreignis beendet: &f{event}");
+        String raw    = plugin.getConfig().getString("messages.event-end", "&aEvent ended: &f{event}");
         Bukkit.broadcastMessage(MessageUtil.color(prefix + raw.replace("{event}", getDisplayName())));
     }
 
@@ -131,7 +131,7 @@ public class InvasionEvent extends WorldEvent {
     public void onTick(int secondsRemaining) {
         if (secondsRemaining == 30 || secondsRemaining == 10) {
             world.getPlayers().forEach(p ->
-                p.sendActionBar(ChatColor.RED + "⚔ Invasion endet in " + secondsRemaining + " Sekunden!")
+                p.sendActionBar(ChatColor.RED + "Invasion ends in " + secondsRemaining + "s!")
             );
         }
     }
