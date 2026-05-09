@@ -1,0 +1,27 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:traded_with_villager": 12,
+      "minecraft:talked_to_villager": 3,
+      "minecraft:time_since_rest": 1110,
+      "minecraft:walk_one_cm": 628,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 1110,
+      "minecraft:jump": 13,
+      "minecraft:time_since_death": 1110,
+      "minecraft:drop": 2,
+      "minecraft:sprint_one_cm": 3162,
+      "minecraft:total_world_time": 1110,
+      "minecraft:fly_one_cm": 14602,
+      "minecraft:sneak_time": 12
+    },
+    "minecraft:crafted": {
+      "minecraft:poppy": 12
+    },
+    "minecraft:dropped": {
+      "minecraft:poppy": 12,
+      "minecraft:emerald": 52
+    }
+  },
+  "DataVersion": 4671
+}
