@@ -16,69 +16,69 @@ import java.util.UUID;
 public class BossBarManager {
 
     private final Dynamic_World_Events plugin;
-    private BossBar bossBar;
+    private final BossBar bossBar;
     private BukkitTask updateTask;
 
-    // Players who have opted out
     private final Set<UUID> hiddenFor = new HashSet<>();
+
+    // Snapshot of when the scheduler last set the next-event countdown
+    private long nextEventScheduledAt   = 0;
+    private int  nextEventTotalSeconds  = 0;
 
     public BossBarManager(Dynamic_World_Events plugin) {
         this.plugin = plugin;
         bossBar = Bukkit.createBossBar(
             MessageUtil.color("&6Dynamic World Events"),
-            BarColor.YELLOW,
+            BarColor.GREEN,
             BarStyle.SOLID
         );
         bossBar.setVisible(true);
-
-        // Add all online players on startup
         Bukkit.getOnlinePlayers().forEach(this::addPlayer);
-
-        // Update every second
         updateTask = Bukkit.getScheduler().runTaskTimer(plugin, this::update, 20L, 20L);
     }
 
-    // ── Tick ─────────────────────────────────────────────────────────────────
+    // Called by EventScheduler every time a new countdown starts
+    public void setNextEventCountdown(int totalSeconds) {
+        this.nextEventTotalSeconds = totalSeconds;
+        this.nextEventScheduledAt  = System.currentTimeMillis();
+    }
 
     private void update() {
         EventManager em = plugin.getEventManager();
-        EventScheduler es = plugin.getEventScheduler();
 
         if (em.hasActiveEvent()) {
-            int secs = em.getSecondsRemaining();
+            int secs  = em.getSecondsRemaining();
             int total = em.getActiveEvent().getDurationSeconds();
-            double progress = Math.max(0, Math.min(1.0, (double) secs / total));
+            double progress = Math.max(0.0, Math.min(1.0, (double) secs / total));
 
-            String name = em.getActiveEvent().getDisplayName();
             int m = secs / 60;
             int s = secs % 60;
-
             bossBar.setTitle(MessageUtil.color(
-                "&6" + name + " &7— &e" + m + "m " + s + "s &7remaining"
+                "&6" + em.getActiveEvent().getDisplayName() + " &7\u2014 &e" + m + "m " + s + "s &7remaining"
             ));
             bossBar.setProgress(progress);
             bossBar.setColor(secs <= 30 ? BarColor.RED : BarColor.YELLOW);
             bossBar.setStyle(BarStyle.SEGMENTED_10);
 
         } else {
-            int secs = es.getNextEventInSeconds();
-            int m = secs / 60;
-            int s = secs % 60;
+            // Calculate live remaining seconds based on wall-clock elapsed time
+            long elapsed = (System.currentTimeMillis() - nextEventScheduledAt) / 1000L;
+            int remaining = (int) Math.max(0, nextEventTotalSeconds - elapsed);
 
-            // Progress goes from 0 → 1 as time counts down
-            int maxInterval = plugin.getConfig().getInt("settings.max-interval-minutes", 45) * 60;
-            double progress = Math.max(0, Math.min(1.0, 1.0 - (double) secs / maxInterval));
+            int m = remaining / 60;
+            int s = remaining % 60;
 
-            bossBar.setTitle(MessageUtil.color(
-                "&7Next event in &e" + m + "m " + s + "s"
-            ));
+            // Progress: 0.0 right after scheduling → 1.0 when event fires
+            double progress = nextEventTotalSeconds > 0
+                ? Math.max(0.0, Math.min(1.0, (double) elapsed / nextEventTotalSeconds))
+                : 0.0;
+
+            bossBar.setTitle(MessageUtil.color("&7Next event in &e" + m + "m " + s + "s"));
             bossBar.setProgress(progress);
             bossBar.setColor(BarColor.GREEN);
             bossBar.setStyle(BarStyle.SOLID);
         }
     }
-
-    // ── Player management ─────────────────────────────────────────────────────
 
     public void addPlayer(Player player) {
         if (!hiddenFor.contains(player.getUniqueId())) {
@@ -92,28 +92,17 @@ public class BossBarManager {
 
     public void toggle(Player player) {
         UUID uuid = player.getUniqueId();
+        String prefix = plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r");
         if (hiddenFor.contains(uuid)) {
             hiddenFor.remove(uuid);
             bossBar.addPlayer(player);
-            player.sendMessage(MessageUtil.color(
-                plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r")
-                + "&aBoss bar enabled."
-            ));
+            player.sendMessage(MessageUtil.color(prefix + "&aBoss bar enabled."));
         } else {
             hiddenFor.add(uuid);
             bossBar.removePlayer(player);
-            player.sendMessage(MessageUtil.color(
-                plugin.getConfig().getString("messages.prefix", "&8[&6DWE&8] &r")
-                + "&7Boss bar disabled. Use &f/dwe bossbar&7 to re-enable."
-            ));
+            player.sendMessage(MessageUtil.color(prefix + "&7Boss bar disabled. Use &f/dwe bossbar&7 to re-enable."));
         }
     }
-
-    public boolean isHidden(Player player) {
-        return hiddenFor.contains(player.getUniqueId());
-    }
-
-    // ── Cleanup ───────────────────────────────────────────────────────────────
 
     public void shutdown() {
         if (updateTask != null) updateTask.cancel();

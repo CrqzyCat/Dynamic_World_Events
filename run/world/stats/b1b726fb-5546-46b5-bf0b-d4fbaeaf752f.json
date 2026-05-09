@@ -3,32 +3,36 @@
     "minecraft:crafted": {
       "minecraft:poppy": 12
     },
-    "minecraft:dropped": {
-      "minecraft:poppy": 12,
-      "minecraft:leaf_litter": 4,
-      "minecraft:emerald": 52
+    "minecraft:custom": {
+      "minecraft:traded_with_villager": 12,
+      "minecraft:talked_to_villager": 3,
+      "minecraft:time_since_rest": 13201,
+      "minecraft:walk_one_cm": 8371,
+      "minecraft:leave_game": 4,
+      "minecraft:damage_taken": 30,
+      "minecraft:play_time": 13201,
+      "minecraft:jump": 83,
+      "minecraft:time_since_death": 13201,
+      "minecraft:drop": 11,
+      "minecraft:sprint_one_cm": 17962,
+      "minecraft:open_chest": 6,
+      "minecraft:fall_one_cm": 1066,
+      "minecraft:total_world_time": 13201,
+      "minecraft:fly_one_cm": 43104,
+      "minecraft:crouch_one_cm": 15,
+      "minecraft:sneak_time": 19
     },
     "minecraft:picked_up": {
       "minecraft:leaf_litter": 4
     },
-    "minecraft:custom": {
-      "minecraft:traded_with_villager": 12,
-      "minecraft:talked_to_villager": 3,
-      "minecraft:time_since_rest": 11288,
-      "minecraft:walk_one_cm": 5977,
-      "minecraft:leave_game": 3,
-      "minecraft:damage_taken": 30,
-      "minecraft:play_time": 11288,
-      "minecraft:jump": 58,
-      "minecraft:time_since_death": 11288,
-      "minecraft:drop": 6,
-      "minecraft:sprint_one_cm": 13907,
-      "minecraft:open_chest": 6,
-      "minecraft:fall_one_cm": 1066,
-      "minecraft:total_world_time": 11288,
-      "minecraft:fly_one_cm": 36366,
-      "minecraft:crouch_one_cm": 14,
-      "minecraft:sneak_time": 13
+    "minecraft:dropped": {
+      "minecraft:poppy": 12,
+      "minecraft:iron_ingot": 6,
+      "minecraft:gold_ingot": 4,
+      "minecraft:diamond": 2,
+      "minecraft:leaf_litter": 4,
+      "minecraft:experience_bottle": 3,
+      "minecraft:emerald": 54
     }
   },
   "DataVersion": 4671

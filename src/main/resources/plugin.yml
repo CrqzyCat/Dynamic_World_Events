@@ -7,30 +7,13 @@ description: Dynamic server-wide world events for Paper SMPs
 authors: [ YourName ]
 
 commands:
-  events:
-    description: Show current and next event
-    usage: /events
-    permission: dwe.events.list
-  eventstart:
-    description: Manually start an event
-    usage: /eventstart [event-id]
-    permission: dwe.admin.start
-  eventstop:
-    description: Stop the current event
-    usage: /eventstop
-    permission: dwe.admin.stop
-  eventreload:
-    description: Reload the config
-    usage: /eventreload
-    permission: dwe.admin.reload
   dwe:
-    description: Player settings for DynamicWorldEvents
-    usage: /dwe <bossbar>
-    permission: dwe.events.list
+    description: All DynamicWorldEvents commands
+    usage: /dwe <events|bossbar|start|stop|reload>
 
 permissions:
   dwe.events.list:
-    description: View event info and use /dwe
+    description: View event info and use /dwe bossbar
     default: true
   dwe.admin.start:
     description: Manually start events

@@ -54,13 +54,8 @@ events:
     weight: 8
     duration-seconds: 600
 
-# ==========================================
-#       Discord Webhook (optional)
-# ==========================================
 discord:
-  # Paste your Discord webhook URL here, or leave as-is to disable
   webhook-url: "YOUR_WEBHOOK_URL_HERE"
-  # Name shown as the sender in Discord
   server-name: "My Server"
 
 messages:
