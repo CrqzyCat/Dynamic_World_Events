@@ -49,6 +49,20 @@ events:
       - EMERALD:2
       - EXPERIENCE_BOTTLE:3
 
+  blood_moon:
+    enabled: true
+    weight: 8
+    duration-seconds: 600
+
+# ==========================================
+#       Discord Webhook (optional)
+# ==========================================
+discord:
+  # Paste your Discord webhook URL here, or leave as-is to disable
+  webhook-url: "YOUR_WEBHOOK_URL_HERE"
+  # Name shown as the sender in Discord
+  server-name: "My Server"
+
 messages:
   prefix: "&8[&6DWE&8] &r"
   event-warning: "&eWarning! &7An event starts in &e{seconds}s&7!"

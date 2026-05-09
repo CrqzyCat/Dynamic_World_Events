@@ -12,57 +12,40 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 
-/**
- * Holds all registered WorldEvents and manages which one is currently active.
- * Also drives the per-second tick and the end-of-event cleanup.
- */
 public class EventManager {
 
     private final Dynamic_World_Events plugin;
     private final List<WorldEvent> registeredEvents = new ArrayList<>();
     private final Random random = new Random();
 
-    private WorldEvent activeEvent  = null;
-    private BukkitTask tickTask     = null;
-    private int secondsRemaining    = 0;
+    private WorldEvent activeEvent   = null;
+    private BukkitTask tickTask      = null;
+    private int secondsRemaining     = 0;
 
     public EventManager(Dynamic_World_Events plugin) {
         this.plugin = plugin;
         registerDefaultEvents();
     }
 
-    // ── Event registry ────────────────────────────────────────────────────────
-
-    /**
-     * Register all built-in events here.
-     * Add new event classes to this list as you implement them.
-     */
     private void registerDefaultEvents() {
         registeredEvents.add(new MeteorEvent(plugin));
         registeredEvents.add(new InvasionEvent(plugin));
         registeredEvents.add(new TraderCaravanEvent(plugin));
         registeredEvents.add(new DroughtEvent(plugin));
         registeredEvents.add(new TreasureHuntEvent(plugin));
+        registeredEvents.add(new BloodMoonEvent(plugin));
     }
 
     public void registerEvent(WorldEvent event) {
         registeredEvents.add(event);
     }
 
-    // ── Starting an event ─────────────────────────────────────────────────────
-
-    /**
-     * Picks a random enabled event (weighted) and starts it.
-     * Returns false if no event could be started.
-     */
     public boolean startRandomEvent() {
         List<WorldEvent> pool = registeredEvents.stream()
             .filter(WorldEvent::isEnabled)
             .toList();
-
         if (pool.isEmpty()) return false;
 
-        // Weighted random selection
         int totalWeight = pool.stream().mapToInt(WorldEvent::getWeight).sum();
         int roll = random.nextInt(totalWeight);
         int cursor = 0;
@@ -72,14 +55,9 @@ public class EventManager {
             if (roll < cursor) { chosen = e; break; }
         }
         if (chosen == null) chosen = pool.get(0);
-
         return startEvent(chosen);
     }
 
-    /**
-     * Starts a specific event by ID.
-     * Returns false if the event doesn't exist or one is already running.
-     */
     public boolean startEventById(String id) {
         if (activeEvent != null) return false;
         for (WorldEvent e : registeredEvents) {
@@ -91,7 +69,7 @@ public class EventManager {
     private boolean startEvent(WorldEvent event) {
         if (activeEvent != null) return false;
 
-        World world = Bukkit.getWorlds().get(0); // default world
+        World world = Bukkit.getWorlds().get(0);
         activeEvent = event;
         secondsRemaining = event.getDurationSeconds();
 
@@ -104,45 +82,37 @@ public class EventManager {
             return false;
         }
 
-        // Tick every second
+        // Discord notification
+        plugin.getDiscordWebhook().sendEventStart(event.getDisplayName());
+
         tickTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             secondsRemaining--;
-            try {
-                event.onTick(secondsRemaining);
-            } catch (Exception ex) {
-                plugin.getLogger().log(Level.WARNING, "Error during event tick: " + event.getId(), ex);
-            }
+            try { event.onTick(secondsRemaining); }
+            catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Tick error: " + event.getId(), ex); }
             if (secondsRemaining <= 0) stopCurrentEvent(false);
         }, 20L, 20L);
 
         return true;
     }
 
-    // ── Stopping an event ─────────────────────────────────────────────────────
-
     public void stopCurrentEvent(boolean forced) {
         if (activeEvent == null) return;
 
-        if (tickTask != null) {
-            tickTask.cancel();
-            tickTask = null;
-        }
+        if (tickTask != null) { tickTask.cancel(); tickTask = null; }
 
-        try {
-            activeEvent.end(forced);
-        } catch (Exception ex) {
-            plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex);
-        }
+        try { activeEvent.end(forced); }
+        catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex); }
+
+        // Discord notification
+        plugin.getDiscordWebhook().sendEventEnd(activeEvent.getDisplayName());
 
         activeEvent.setActive(false);
         activeEvent = null;
         secondsRemaining = 0;
     }
 
-    // ── Getters ───────────────────────────────────────────────────────────────
-
-    public WorldEvent getActiveEvent()       { return activeEvent; }
-    public boolean    hasActiveEvent()       { return activeEvent != null; }
-    public int        getSecondsRemaining()  { return secondsRemaining; }
+    public WorldEvent getActiveEvent()            { return activeEvent; }
+    public boolean    hasActiveEvent()            { return activeEvent != null; }
+    public int        getSecondsRemaining()       { return secondsRemaining; }
     public List<WorldEvent> getRegisteredEvents() { return registeredEvents; }
 }

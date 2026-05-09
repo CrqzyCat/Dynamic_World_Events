@@ -8,32 +8,36 @@ authors: [ YourName ]
 
 commands:
   events:
-    description: Zeigt das aktuelle und nächste Ereignis an
+    description: Show current and next event
     usage: /events
     permission: dwe.events.list
   eventstart:
-    description: Startet ein Ereignis manuell
+    description: Manually start an event
     usage: /eventstart [event-id]
     permission: dwe.admin.start
   eventstop:
-    description: Stoppt das aktuelle Ereignis
+    description: Stop the current event
     usage: /eventstop
     permission: dwe.admin.stop
   eventreload:
-    description: Lädt die Config neu
+    description: Reload the config
     usage: /eventreload
     permission: dwe.admin.reload
+  dwe:
+    description: Player settings for DynamicWorldEvents
+    usage: /dwe <bossbar>
+    permission: dwe.events.list
 
 permissions:
   dwe.events.list:
-    description: Event-Info anzeigen
+    description: View event info and use /dwe
     default: true
   dwe.admin.start:
-    description: Events manuell starten
+    description: Manually start events
     default: op
   dwe.admin.stop:
-    description: Events stoppen
+    description: Stop events
     default: op
   dwe.admin.reload:
-    description: Config neu laden
+    description: Reload config
     default: op
