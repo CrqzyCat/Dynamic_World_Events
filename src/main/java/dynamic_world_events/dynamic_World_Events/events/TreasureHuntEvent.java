@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -62,19 +63,25 @@ public class TreasureHuntEvent extends WorldEvent {
         if (players.isEmpty()) return;
 
         Random random = new Random();
-        List<Material> rewards = new ArrayList<>();
+
+        // Build reward pool from config
+        List<ItemStack> rewardPool = new ArrayList<>();
         List<String> rewardConfig = plugin.getConfig().getStringList("events.treasure_hunt.rewards");
         for (String entry : rewardConfig) {
             String[] parts = entry.split(":");
             Material mat = Material.matchMaterial(parts[0]);
             if (mat != null) {
                 int amount = parts.length > 1 ? Integer.parseInt(parts[1]) : 1;
-                for (int i = 0; i < amount; i++) rewards.add(mat);
+                rewardPool.add(new ItemStack(mat, amount));
             }
         }
-        if (rewards.isEmpty()) {
-            rewards.addAll(List.of(Material.DIAMOND, Material.DIAMOND, Material.GOLD_INGOT,
-                Material.GOLD_INGOT, Material.IRON_INGOT, Material.EMERALD));
+        // Fallback loot if config is empty
+        if (rewardPool.isEmpty()) {
+            rewardPool.add(new ItemStack(Material.DIAMOND, 2));
+            rewardPool.add(new ItemStack(Material.GOLD_INGOT, 4));
+            rewardPool.add(new ItemStack(Material.IRON_INGOT, 6));
+            rewardPool.add(new ItemStack(Material.EMERALD, 2));
+            rewardPool.add(new ItemStack(Material.EXPERIENCE_BOTTLE, 3));
         }
 
         for (int i = 0; i < count; i++) {
@@ -86,17 +93,25 @@ public class TreasureHuntEvent extends WorldEvent {
             Location loc = base.clone().add(offsetX, 0, offsetZ);
             loc.setY(world.getHighestBlockYAt(loc));
 
+            // Set the block and force a state update before filling
             Block block = world.getBlockAt(loc);
-            block.setType(Material.CHEST);
+            block.setType(Material.CHEST, false);
 
-            if (block.getState() instanceof Chest chest) {
+            // Re-fetch state AFTER setting the type
+            BlockState state = block.getState();
+            if (state instanceof Chest chest) {
                 Inventory inv = chest.getInventory();
-                Collections.shuffle(rewards);
-                int slots = Math.min(9, rewards.size());
-                for (int s = 0; s < slots; s++) {
-                    inv.setItem(s, new ItemStack(rewards.get(s)));
+                inv.clear();
+
+                // Shuffle and place items into random slots
+                Collections.shuffle(rewardPool);
+                List<Integer> slots = new ArrayList<>();
+                for (int s = 0; s < 27; s++) slots.add(s);
+                Collections.shuffle(slots);
+
+                for (int r = 0; r < Math.min(rewardPool.size(), slots.size()); r++) {
+                    inv.setItem(slots.get(r), rewardPool.get(r).clone());
                 }
-                chest.update();
             }
 
             chestLocations.add(loc);

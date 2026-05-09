@@ -1,26 +1,33 @@
 {
   "stats": {
-    "minecraft:custom": {
-      "minecraft:traded_with_villager": 12,
-      "minecraft:talked_to_villager": 3,
-      "minecraft:time_since_rest": 1110,
-      "minecraft:walk_one_cm": 628,
-      "minecraft:leave_game": 1,
-      "minecraft:play_time": 1110,
-      "minecraft:jump": 13,
-      "minecraft:time_since_death": 1110,
-      "minecraft:drop": 2,
-      "minecraft:sprint_one_cm": 3162,
-      "minecraft:total_world_time": 1110,
-      "minecraft:fly_one_cm": 14602,
-      "minecraft:sneak_time": 12
-    },
     "minecraft:crafted": {
       "minecraft:poppy": 12
     },
     "minecraft:dropped": {
       "minecraft:poppy": 12,
+      "minecraft:leaf_litter": 4,
       "minecraft:emerald": 52
+    },
+    "minecraft:picked_up": {
+      "minecraft:leaf_litter": 4
+    },
+    "minecraft:custom": {
+      "minecraft:traded_with_villager": 12,
+      "minecraft:talked_to_villager": 3,
+      "minecraft:time_since_rest": 10450,
+      "minecraft:walk_one_cm": 4799,
+      "minecraft:leave_game": 2,
+      "minecraft:damage_taken": 30,
+      "minecraft:play_time": 10450,
+      "minecraft:jump": 53,
+      "minecraft:time_since_death": 10450,
+      "minecraft:drop": 6,
+      "minecraft:sprint_one_cm": 13406,
+      "minecraft:open_chest": 3,
+      "minecraft:fall_one_cm": 1066,
+      "minecraft:total_world_time": 10450,
+      "minecraft:fly_one_cm": 25460,
+      "minecraft:sneak_time": 12
     }
   },
   "DataVersion": 4671
