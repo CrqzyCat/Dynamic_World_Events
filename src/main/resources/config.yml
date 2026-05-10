@@ -137,3 +137,48 @@ schedule:
 #       - blood_moon
 #       - meteor
 #       - haunting
+
+# ==========================================
+#       Seasonal Weight Modifiers
+# ==========================================
+# Multiplies event weights during specific date ranges (MM-dd format).
+# 2.0 = twice as likely, 0.5 = half as likely, 3.0 = three times as likely.
+# Multiple seasons can overlap — modifiers stack multiplicatively.
+# Seasons wrap around year boundaries (e.g. Dec 01 → Jan 06).
+
+seasonal:
+  enabled: true
+  seasons:
+    halloween:
+      start: "10-01"
+      end:   "11-01"
+      modifiers:
+        haunting:    3.0
+        blood_moon:  2.0
+        drought:     0.2
+        bountiful_harvest: 0.3
+
+    winter:
+      start: "12-01"
+      end:   "01-06"
+      modifiers:
+        treasure_hunt:   2.5
+        trader_caravan:  2.0
+        drought:         0.1
+        thunderstorm:    0.3
+
+    spring:
+      start: "03-20"
+      end:   "06-21"
+      modifiers:
+        bountiful_harvest: 3.0
+        drought:           0.5
+        trader_caravan:    1.5
+
+    summer:
+      start: "06-21"
+      end:   "09-22"
+      modifiers:
+        drought:           2.5
+        thunderstorm:      2.0
+        bountiful_harvest: 1.5

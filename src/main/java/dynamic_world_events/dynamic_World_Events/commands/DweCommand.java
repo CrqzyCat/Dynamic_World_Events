@@ -200,6 +200,19 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 );
             }
 
+            case "season" -> {
+                String activeSeason = plugin.getSeasonalManager().getActiveSeason();
+                if (activeSeason == null) {
+                    sender.sendMessage(MessageUtil.color(prefix + "00267No seasonal modifier active right now."));
+                } else {
+                    sender.sendMessage(MessageUtil.color(prefix + "0026aActive season: 0026f" + activeSeason));
+                    plugin.getSeasonalManager().getActiveModifiers().forEach((id, mult) -> {
+                        String arrow = mult >= 1.0 ? "0026a2191" : "0026c2193";
+                        sender.sendMessage(MessageUtil.color("  0026f" + id + " 002682014 " + arrow + " 0026f" + String.format("%.1fx", mult)));
+                    });
+                }
+            }
+
             default -> sendHelp(sender, prefix);
         }
         return true;
@@ -228,7 +241,7 @@ public class DweCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule"));
+            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season"));
             sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
         if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
             if (sender.hasPermission("dwe.admin.stop"))   subs.add("stop");

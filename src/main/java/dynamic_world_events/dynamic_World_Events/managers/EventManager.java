@@ -51,12 +51,17 @@ public class EventManager {
             .toList();
         if (pool.isEmpty()) return false;
 
-        int totalWeight = pool.stream().mapToInt(WorldEvent::getWeight).sum();
+        // Use seasonal effective weights instead of raw config weights
+        SeasonalManager sm = plugin.getSeasonalManager();
+        int totalWeight = pool.stream()
+            .mapToInt(sm::getEffectiveWeight)
+            .sum();
+
         int roll = random.nextInt(totalWeight);
         int cursor = 0;
         WorldEvent chosen = null;
         for (WorldEvent e : pool) {
-            cursor += e.getWeight();
+            cursor += sm.getEffectiveWeight(e);
             if (roll < cursor) { chosen = e; break; }
         }
         if (chosen == null) chosen = pool.get(0);
@@ -76,7 +81,6 @@ public class EventManager {
 
         World world = plugin.getWorldConfigManager().getEventWorld();
 
-        // Fire Bukkit API event — allow other plugins to cancel
         DWEEventStartEvent apiEvent = new DWEEventStartEvent(event, world);
         Bukkit.getPluginManager().callEvent(apiEvent);
         if (apiEvent.isCancelled()) {
@@ -112,7 +116,6 @@ public class EventManager {
         if (activeEvent == null) return;
         if (tickTask != null) { tickTask.cancel(); tickTask = null; }
 
-        // Record participation stats
         String eventId = activeEvent.getId();
         for (Player p : Bukkit.getOnlinePlayers()) {
             plugin.getStatisticsManager().recordEventParticipation(p.getUniqueId(), p.getName(), eventId);
@@ -121,9 +124,7 @@ public class EventManager {
         try { activeEvent.end(forced); }
         catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex); }
 
-        // Fire Bukkit API end event
         Bukkit.getPluginManager().callEvent(new DWEEventEndEvent(activeEvent, forced));
-
         plugin.getDiscordWebhook().sendEventEnd(activeEvent.getDisplayName());
 
         activeEvent.setActive(false);

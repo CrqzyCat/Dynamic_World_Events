@@ -17,6 +17,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
     private DisabledEventsManager  disabledEventsManager;
     private StatisticsManager      statisticsManager;
     private WorldConfigManager     worldConfigManager;
+    private SeasonalManager        seasonalManager;
     private EventScheduleManager   eventScheduleManager;
     private EventManager           eventManager;
     private BossBarManager         bossBarManager;
@@ -31,6 +32,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         this.disabledEventsManager = new DisabledEventsManager(this);
         this.statisticsManager     = new StatisticsManager(this);
         this.worldConfigManager    = new WorldConfigManager(this);
+        this.seasonalManager       = new SeasonalManager(this);
         this.eventScheduleManager  = new EventScheduleManager(this);
         this.eventManager          = new EventManager(this);
         this.bossBarManager        = new BossBarManager(this);
@@ -70,6 +72,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         this.disabledEventsManager = new DisabledEventsManager(this);
         this.statisticsManager     = new StatisticsManager(this);
         this.worldConfigManager    = new WorldConfigManager(this);
+        this.seasonalManager       = new SeasonalManager(this);
         this.eventScheduleManager  = new EventScheduleManager(this);
         this.eventManager          = new EventManager(this);
         this.bossBarManager        = new BossBarManager(this);
@@ -88,6 +91,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
     public DisabledEventsManager   getDisabledEventsManager()    { return disabledEventsManager; }
     public StatisticsManager       getStatisticsManager()        { return statisticsManager; }
     public WorldConfigManager      getWorldConfigManager()       { return worldConfigManager; }
+    public SeasonalManager         getSeasonalManager()          { return seasonalManager; }
     public EventScheduleManager    getEventScheduleManager()     { return eventScheduleManager; }
     public EventManager            getEventManager()             { return eventManager; }
     public EventScheduler          getEventScheduler()           { return eventScheduler; }
