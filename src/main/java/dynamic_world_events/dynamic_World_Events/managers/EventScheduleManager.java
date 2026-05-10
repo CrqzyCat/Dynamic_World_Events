@@ -72,9 +72,11 @@ public class EventScheduleManager {
             List<?> rawList = plugin.getConfig().getList("schedule.entries");
             if (rawList == null) return;
             for (Object obj : rawList) {
-                if (obj instanceof java.util.Map<?, ?> map) {
-                    String timeStr  = String.valueOf(map.getOrDefault("time", ""));
-                    String eventId  = String.valueOf(map.getOrDefault("event", "random"));
+                if (obj instanceof java.util.Map) {
+                    @SuppressWarnings("unchecked")
+                    java.util.Map<Object, Object> map = (java.util.Map<Object, Object>) obj;
+                    String timeStr = map.containsKey("time")  ? String.valueOf(map.get("time"))  : "";
+                    String eventId = map.containsKey("event") ? String.valueOf(map.get("event")) : "random";
                     parseAndAdd(timeStr, eventId);
                 }
             }
