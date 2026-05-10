@@ -201,6 +201,42 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 );
             }
 
+            case "vote" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(MessageUtil.color(prefix + "0026cThis subcommand is player-only."));
+                    return true;
+                }
+                if (!plugin.getVotingManager().isVoteActive()) {
+                    player.sendMessage(MessageUtil.color(prefix + "00267No vote is currently active."));
+                    return true;
+                }
+                if (args.length < 2) {
+                    player.sendMessage(MessageUtil.color(prefix + "00267Voting options:"));
+                    List<dynamic_world_events.dynamic_World_Events.events.WorldEvent> opts = plugin.getVotingManager().getOptions();
+                    for (int i = 0; i < opts.size(); i++) {
+                        player.sendMessage(MessageUtil.color("  00268[0026e" + (i + 1) + "00268] 0026f" + opts.get(i).getDisplayName()));
+                    }
+                    player.sendMessage(MessageUtil.color(prefix + "00267Use 0026f/dwe vote <number>00267 to vote."));
+                    return true;
+                }
+                try {
+                    int choice = Integer.parseInt(args[1]);
+                    player.sendMessage(MessageUtil.color(plugin.getVotingManager().castVote(player, choice)));
+                } catch (NumberFormatException e) {
+                    player.sendMessage(MessageUtil.color(prefix + "0026cPlease enter a number."));
+                }
+            }
+
+            case "history" -> {
+                List<String> hist = plugin.getHistoryManager().getLast(10);
+                if (hist.isEmpty()) {
+                    sender.sendMessage(MessageUtil.color(prefix + "00267No events recorded yet."));
+                } else {
+                    sender.sendMessage(MessageUtil.color(prefix + "00267Last " + hist.size() + " events:"));
+                    hist.forEach(line -> sender.sendMessage(MessageUtil.color("  00268" + line)));
+                }
+            }
+
             case "season" -> {
                 String activeSeason = plugin.getSeasonalManager().getActiveSeason();
                 if (activeSeason == null) {
@@ -271,7 +307,7 @@ public class DweCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season", "gui", "chains"));
+            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season", "vote", "history", "gui", "chains"));
             sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
         if (sender.hasPermission("dwe.admin.gui"))
             sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));

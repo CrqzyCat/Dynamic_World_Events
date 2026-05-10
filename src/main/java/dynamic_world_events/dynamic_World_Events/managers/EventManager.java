@@ -51,11 +51,8 @@ public class EventManager {
             .toList();
         if (pool.isEmpty()) return false;
 
-        // Use seasonal effective weights instead of raw config weights
         SeasonalManager sm = plugin.getSeasonalManager();
-        int totalWeight = pool.stream()
-            .mapToInt(sm::getEffectiveWeight)
-            .sum();
+        int totalWeight = pool.stream().mapToInt(sm::getEffectiveWeight).sum();
 
         int roll = random.nextInt(totalWeight);
         int cursor = 0;
@@ -116,18 +113,24 @@ public class EventManager {
         if (activeEvent == null) return;
         if (tickTask != null) { tickTask.cancel(); tickTask = null; }
 
-        String eventId = activeEvent.getId();
-        WorldEvent endedEvent = activeEvent;
+        String eventId       = activeEvent.getId();
+        String eventName     = activeEvent.getDisplayName();
+
+        // Stats
         for (Player p : Bukkit.getOnlinePlayers()) {
             plugin.getStatisticsManager().recordEventParticipation(p.getUniqueId(), p.getName(), eventId);
         }
 
         try { activeEvent.end(forced); }
-        catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex); }
+        catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + eventId, ex); }
 
+        // History
+        plugin.getHistoryManager().record(eventName, forced);
+
+        // API event + Discord + chains
         Bukkit.getPluginManager().callEvent(new DWEEventEndEvent(activeEvent, forced));
+        plugin.getDiscordWebhook().sendEventEnd(eventName);
         plugin.getEventChainManager().onEventEnd(eventId, forced);
-        plugin.getDiscordWebhook().sendEventEnd(activeEvent.getDisplayName());
 
         activeEvent.setActive(false);
         activeEvent = null;

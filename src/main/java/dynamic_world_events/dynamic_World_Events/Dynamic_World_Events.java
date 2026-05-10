@@ -16,9 +16,11 @@ public final class Dynamic_World_Events extends JavaPlugin {
     private DWEApi                 api;
     private DisabledEventsManager  disabledEventsManager;
     private StatisticsManager      statisticsManager;
+    private HistoryManager         historyManager;
     private WorldConfigManager     worldConfigManager;
     private SeasonalManager        seasonalManager;
     private EventChainManager      eventChainManager;
+    private VotingManager          votingManager;
     private EventScheduleManager   eventScheduleManager;
     private EventManager           eventManager;
     private BossBarManager         bossBarManager;
@@ -32,9 +34,11 @@ public final class Dynamic_World_Events extends JavaPlugin {
 
         this.disabledEventsManager = new DisabledEventsManager(this);
         this.statisticsManager     = new StatisticsManager(this);
+        this.historyManager        = new HistoryManager(this);
         this.worldConfigManager    = new WorldConfigManager(this);
         this.seasonalManager       = new SeasonalManager(this);
         this.eventChainManager     = new EventChainManager(this);
+        this.votingManager         = new VotingManager(this);
         this.eventScheduleManager  = new EventScheduleManager(this);
         this.eventManager          = new EventManager(this);
         this.bossBarManager        = new BossBarManager(this);
@@ -61,6 +65,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         if (eventScheduler       != null) eventScheduler.stop();
         if (eventScheduleManager != null) eventScheduleManager.stop();
         if (eventChainManager    != null) eventChainManager.cancelAll();
+        if (votingManager        != null) votingManager.cancel();
         if (eventManager         != null) eventManager.stopCurrentEvent(true);
         getLogger().info("DynamicWorldEvents disabled.");
     }
@@ -71,13 +76,16 @@ public final class Dynamic_World_Events extends JavaPlugin {
         eventScheduler.stop();
         eventScheduleManager.stop();
         eventChainManager.cancelAll();
+        votingManager.cancel();
         eventManager.stopCurrentEvent(true);
 
         this.disabledEventsManager = new DisabledEventsManager(this);
         this.statisticsManager     = new StatisticsManager(this);
+        this.historyManager        = new HistoryManager(this);
         this.worldConfigManager    = new WorldConfigManager(this);
         this.seasonalManager       = new SeasonalManager(this);
         this.eventChainManager     = new EventChainManager(this);
+        this.votingManager         = new VotingManager(this);
         this.eventScheduleManager  = new EventScheduleManager(this);
         this.eventManager          = new EventManager(this);
         this.bossBarManager        = new BossBarManager(this);
@@ -95,9 +103,11 @@ public final class Dynamic_World_Events extends JavaPlugin {
     public DWEApi                  getApi()                      { return api; }
     public DisabledEventsManager   getDisabledEventsManager()    { return disabledEventsManager; }
     public StatisticsManager       getStatisticsManager()        { return statisticsManager; }
+    public HistoryManager          getHistoryManager()           { return historyManager; }
     public WorldConfigManager      getWorldConfigManager()       { return worldConfigManager; }
     public SeasonalManager         getSeasonalManager()          { return seasonalManager; }
     public EventChainManager       getEventChainManager()        { return eventChainManager; }
+    public VotingManager           getVotingManager()            { return votingManager; }
     public EventScheduleManager    getEventScheduleManager()     { return eventScheduleManager; }
     public EventManager            getEventManager()             { return eventManager; }
     public EventScheduler          getEventScheduler()           { return eventScheduler; }

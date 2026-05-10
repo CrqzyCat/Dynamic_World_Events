@@ -216,3 +216,22 @@ chains:
       chance:  0.5
       announce: true
       announce-message: "&bThe long drought breaks — a violent storm is building on the horizon."
+
+# ==========================================
+#       Voting System
+# ==========================================
+voting:
+  enabled: true
+  # How long the vote stays open (seconds)
+  duration-seconds: 60
+  # Number of event options presented to players (2-4)
+  options: 3
+  # Broadcast vote options in chat
+  announce-in-chat: true
+
+# ==========================================
+#       Event History
+# ==========================================
+history:
+  # Maximum number of past events to remember
+  max-entries: 20
