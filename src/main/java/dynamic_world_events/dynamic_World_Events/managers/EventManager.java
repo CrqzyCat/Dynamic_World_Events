@@ -5,6 +5,7 @@ import dynamic_world_events.dynamic_World_Events.events.*;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class EventManager {
         registeredEvents.add(new BloodMoonEvent(plugin));
         registeredEvents.add(new ThunderstormEvent(plugin));
         registeredEvents.add(new HauntingEvent(plugin));
+        registeredEvents.add(new BountifulHarvestEvent(plugin));
     }
 
     public void registerEvent(WorldEvent event) {
@@ -84,7 +86,6 @@ public class EventManager {
             return false;
         }
 
-        // Discord notification
         plugin.getDiscordWebhook().sendEventStart(event.getDisplayName());
 
         tickTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
@@ -99,13 +100,17 @@ public class EventManager {
 
     public void stopCurrentEvent(boolean forced) {
         if (activeEvent == null) return;
-
         if (tickTask != null) { tickTask.cancel(); tickTask = null; }
+
+        // Record participation for all online players
+        String eventId = activeEvent.getId();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            plugin.getStatisticsManager().recordEventParticipation(p.getUniqueId(), p.getName(), eventId);
+        }
 
         try { activeEvent.end(forced); }
         catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex); }
 
-        // Discord notification
         plugin.getDiscordWebhook().sendEventEnd(activeEvent.getDisplayName());
 
         activeEvent.setActive(false);

@@ -85,3 +85,10 @@ messages:
     spawn-interval-ticks: 100
     # Phantom size (1 = normal, 2 = large, 3 = huge)
     phantom-size: 2
+
+  bountiful_harvest:
+    enabled: true
+    weight: 15
+    duration-seconds: 300
+    # Double crop drops when harvesting during the event
+    double-drops: true

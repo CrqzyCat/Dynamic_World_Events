@@ -2,18 +2,16 @@ package dynamic_world_events.dynamic_World_Events.commands;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.events.WorldEvent;
+import dynamic_world_events.dynamic_World_Events.managers.StatisticsManager;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DweCommand implements CommandExecutor, TabCompleter {
@@ -56,6 +54,52 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                         .getString("messages.next-event", "&7Next event in approx. &e{minutes} min&7.")
                         .replace("{minutes}", String.valueOf(min));
                     sender.sendMessage(MessageUtil.color(prefix + msg));
+                }
+            }
+
+            case "stats" -> {
+                // /dwe stats [player]
+                Player target;
+                if (args.length >= 2) {
+                    target = Bukkit.getPlayerExact(args[1]);
+                    if (target == null) {
+                        sender.sendMessage(MessageUtil.color(prefix + "&cPlayer &f" + args[1] + " &cnot found or offline."));
+                        return true;
+                    }
+                } else if (sender instanceof Player p) {
+                    target = p;
+                } else {
+                    sender.sendMessage(MessageUtil.color(prefix + "&cUsage: /dwe stats <player>"));
+                    return true;
+                }
+
+                StatisticsManager sm = plugin.getStatisticsManager();
+                UUID uuid = target.getUniqueId();
+
+                sender.sendMessage(MessageUtil.color(prefix + "&7Stats for &f" + target.getName() + "&7:"));
+                sender.sendMessage(MessageUtil.color("  &7Events participated: &e" + sm.getEventsParticipated(uuid)));
+                sender.sendMessage(MessageUtil.color("  &7Invasion kills: &e" + sm.getInvasionKills(uuid)));
+                sender.sendMessage(MessageUtil.color("  &7Treasures found: &e" + sm.getTreasuresFound(uuid)));
+                sender.sendMessage(MessageUtil.color("  &7Blood Moons survived: &e" + sm.getBloodMoonsSurvived(uuid)));
+            }
+
+            case "top" -> {
+                List<Map.Entry<String, Integer>> board = plugin.getStatisticsManager().getLeaderboard(10);
+                sender.sendMessage(MessageUtil.color(prefix + "&6Top Players — Events Participated:"));
+                if (board.isEmpty()) {
+                    sender.sendMessage(MessageUtil.color("  &7No data yet."));
+                } else {
+                    for (int i = 0; i < board.size(); i++) {
+                        String medal = switch (i) {
+                            case 0 -> "&6#1";
+                            case 1 -> "&7#2";
+                            case 2 -> "&c#3";
+                            default -> "&8#" + (i + 1);
+                        };
+                        sender.sendMessage(MessageUtil.color(
+                            "  " + medal + " &f" + board.get(i).getKey() + " &7— &e" + board.get(i).getValue() + " events"
+                        ));
+                    }
                 }
             }
 
@@ -111,11 +155,9 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(MessageUtil.color(prefix + "&cUnknown event: &f" + id)); return true;
                 }
                 boolean changed = plugin.getDisabledEventsManager().disable(id);
-                if (changed) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&eEvent &f" + id + " &edisabled. It will not trigger automatically."));
-                } else {
-                    sender.sendMessage(MessageUtil.color(prefix + "&7Event &f" + id + " &7is already disabled."));
-                }
+                sender.sendMessage(MessageUtil.color(prefix + (changed
+                    ? "&eEvent &f" + id + " &edisabled."
+                    : "&7Event &f" + id + " &7is already disabled.")));
             }
 
             case "enable" -> {
@@ -127,11 +169,9 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 }
                 String id = args[1].toLowerCase();
                 boolean changed = plugin.getDisabledEventsManager().enable(id);
-                if (changed) {
-                    sender.sendMessage(MessageUtil.color(prefix + "&aEvent &f" + id + " &aenabled."));
-                } else {
-                    sender.sendMessage(MessageUtil.color(prefix + "&7Event &f" + id + " &7was not disabled."));
-                }
+                sender.sendMessage(MessageUtil.color(prefix + (changed
+                    ? "&aEvent &f" + id + " &aenabled."
+                    : "&7Event &f" + id + " &7was not disabled.")));
             }
 
             case "list" -> {
@@ -141,8 +181,7 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 Set<String> disabled = plugin.getDisabledEventsManager().getDisabledIds();
                 sender.sendMessage(MessageUtil.color(prefix + "&7All events:"));
                 for (WorldEvent e : plugin.getEventManager().getRegisteredEvents()) {
-                    boolean isDisabled = disabled.contains(e.getId());
-                    String status = isDisabled ? "&c✗ disabled" : "&a✓ enabled";
+                    String status = disabled.contains(e.getId()) ? "&c✗ disabled" : "&a✓ enabled";
                     sender.sendMessage(MessageUtil.color("  &f" + e.getId() + " &8— " + status));
                 }
             }
@@ -156,6 +195,8 @@ public class DweCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtil.color(prefix + "&7Available commands:"));
         sender.sendMessage(MessageUtil.color("&7 /dwe events &8— &fShow active event info"));
         sender.sendMessage(MessageUtil.color("&7 /dwe bossbar &8— &fToggle boss bar (player only)"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe stats [player] &8— &fView your or another player's stats"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe top &8— &fTop 10 event leaderboard"));
         if (sender.hasPermission("dwe.admin.start"))
             sender.sendMessage(MessageUtil.color("&7 /dwe start [id] &8— &fStart an event"));
         if (sender.hasPermission("dwe.admin.stop"))
@@ -172,42 +213,32 @@ public class DweCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar"));
+            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top"));
             if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
             if (sender.hasPermission("dwe.admin.stop"))   subs.add("stop");
             if (sender.hasPermission("dwe.admin.reload")) subs.add("reload");
-            if (sender.hasPermission("dwe.admin.manage")) {
-                subs.add("disable");
-                subs.add("enable");
-                subs.add("list");
-            }
+            if (sender.hasPermission("dwe.admin.manage")) { subs.add("disable"); subs.add("enable"); subs.add("list"); }
             return subs.stream().filter(s -> s.startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         }
-
-        if (args.length == 2 && sender.hasPermission("dwe.admin.start") && args[0].equalsIgnoreCase("start")) {
-            return plugin.getEventManager().getRegisteredEvents().stream()
-                .map(WorldEvent::getId)
-                .filter(id -> id.startsWith(args[1].toLowerCase()))
-                .collect(Collectors.toList());
-        }
-
-        if (args.length == 2 && sender.hasPermission("dwe.admin.manage")) {
-            if (args[0].equalsIgnoreCase("disable")) {
-                // Only suggest currently enabled events
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("start") && sender.hasPermission("dwe.admin.start")) {
+                return plugin.getEventManager().getRegisteredEvents().stream()
+                    .map(WorldEvent::getId).filter(id -> id.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+            }
+            if (args[0].equalsIgnoreCase("disable") && sender.hasPermission("dwe.admin.manage")) {
                 return plugin.getEventManager().getRegisteredEvents().stream()
                     .filter(e -> !plugin.getDisabledEventsManager().isDisabled(e.getId()))
-                    .map(WorldEvent::getId)
-                    .filter(id -> id.startsWith(args[1].toLowerCase()))
-                    .collect(Collectors.toList());
+                    .map(WorldEvent::getId).filter(id -> id.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
             }
-            if (args[0].equalsIgnoreCase("enable")) {
-                // Only suggest currently disabled events
+            if (args[0].equalsIgnoreCase("enable") && sender.hasPermission("dwe.admin.manage")) {
                 return plugin.getDisabledEventsManager().getDisabledIds().stream()
-                    .filter(id -> id.startsWith(args[1].toLowerCase()))
-                    .collect(Collectors.toList());
+                    .filter(id -> id.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+            }
+            if (args[0].equalsIgnoreCase("stats")) {
+                return Bukkit.getOnlinePlayers().stream()
+                    .map(Player::getName).filter(n -> n.startsWith(args[1])).collect(Collectors.toList());
             }
         }
-
         return Collections.emptyList();
     }
 }
