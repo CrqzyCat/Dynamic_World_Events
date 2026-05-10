@@ -150,7 +150,7 @@ public class EventManagerGui implements Listener {
         } else {
             chains.keySet().forEach(id -> chainLore.add(ChatColor.AQUA + "⏳ " + id));
         }
-        inv.setItem(43, makeItem(Material<>.CHAIN,
+        inv.setItem(43, makeItem(Material.TRIPWIRE_HOOK,
             ChatColor.YELLOW + "Pending Chains", chainLore
         ));
     }
