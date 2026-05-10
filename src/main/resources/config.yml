@@ -182,3 +182,37 @@ seasonal:
         drought:           2.5
         thunderstorm:      2.0
         bountiful_harvest: 1.5
+
+# ==========================================
+#       Event Chains
+# ==========================================
+# When an event ends naturally, it can trigger a follow-up event after a delay.
+# Forced stops (/dwe stop) never trigger chains.
+# chance: probability 0.0-1.0 that the chain fires (1.0 = always)
+
+chains:
+  enabled: true
+  entries:
+    blood_moon_to_haunting:
+      trigger: blood_moon
+      next:    haunting
+      delay-minutes: 1440
+      chance:  0.75
+      announce: true
+      announce-message: "&5The spirits stirred by last night's Blood Moon grow restless..."
+
+    invasion_aftermath:
+      trigger: invasion
+      next:    blood_moon
+      delay-minutes: 60
+      chance:  0.3
+      announce: true
+      announce-message: "&cThe invasion has drawn something darker from the shadows..."
+
+    drought_to_thunderstorm:
+      trigger: drought
+      next:    thunderstorm
+      delay-minutes: 30
+      chance:  0.5
+      announce: true
+      announce-message: "&bThe long drought breaks — a violent storm is building on the horizon."

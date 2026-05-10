@@ -2,6 +2,7 @@ package dynamic_world_events.dynamic_World_Events.commands;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.events.WorldEvent;
+import dynamic_world_events.dynamic_World_Events.gui.EventManagerGui;
 import dynamic_world_events.dynamic_World_Events.managers.StatisticsManager;
 import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
 import org.bukkit.Bukkit;
@@ -213,6 +214,31 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 }
             }
 
+            case "gui" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(MessageUtil.color(prefix + "0026cThis subcommand is player-only."));
+                    return true;
+                }
+                if (!player.hasPermission("dwe.admin.gui")) {
+                    player.sendMessage(MessageUtil.color(prefix + "0026cNo permission."));
+                    return true;
+                }
+                new EventManagerGui(plugin, player);
+            }
+
+            case "chains" -> {
+                if (!sender.hasPermission("dwe.admin.manage")) {
+                    sender.sendMessage(MessageUtil.color(prefix + "0026cNo permission.")); return true;
+                }
+                var pending = plugin.getEventChainManager().getPendingChains();
+                if (pending.isEmpty()) {
+                    sender.sendMessage(MessageUtil.color(prefix + "00267No pending event chains."));
+                } else {
+                    sender.sendMessage(MessageUtil.color(prefix + "00267Pending chains:"));
+                    pending.keySet().forEach(id -> sender.sendMessage(MessageUtil.color("  0026e23f3 0026f" + id)));
+                }
+            }
+
             default -> sendHelp(sender, prefix);
         }
         return true;
@@ -225,6 +251,10 @@ public class DweCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtil.color("&7 /dwe stats [player] &8— &fView your or another player's stats"));
         sender.sendMessage(MessageUtil.color("&7 /dwe top &8— &fTop 10 event leaderboard"));
         sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
+        if (sender.hasPermission("dwe.admin.gui"))
+            sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));
+        if (sender.hasPermission("dwe.admin.manage"))
+            sender.sendMessage(MessageUtil.color("00267 /dwe chains 002682014 0026fView pending event chains"));
         if (sender.hasPermission("dwe.admin.start"))
             sender.sendMessage(MessageUtil.color("&7 /dwe start [id] &8— &fStart an event"));
         if (sender.hasPermission("dwe.admin.stop"))
@@ -241,8 +271,12 @@ public class DweCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season"));
+            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season", "gui", "chains"));
             sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
+        if (sender.hasPermission("dwe.admin.gui"))
+            sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));
+        if (sender.hasPermission("dwe.admin.manage"))
+            sender.sendMessage(MessageUtil.color("00267 /dwe chains 002682014 0026fView pending event chains"));
         if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
             if (sender.hasPermission("dwe.admin.stop"))   subs.add("stop");
             if (sender.hasPermission("dwe.admin.reload")) subs.add("reload");

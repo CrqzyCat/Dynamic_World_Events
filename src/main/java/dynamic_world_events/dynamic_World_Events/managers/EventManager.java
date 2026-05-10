@@ -117,6 +117,7 @@ public class EventManager {
         if (tickTask != null) { tickTask.cancel(); tickTask = null; }
 
         String eventId = activeEvent.getId();
+        WorldEvent endedEvent = activeEvent;
         for (Player p : Bukkit.getOnlinePlayers()) {
             plugin.getStatisticsManager().recordEventParticipation(p.getUniqueId(), p.getName(), eventId);
         }
@@ -125,6 +126,7 @@ public class EventManager {
         catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex); }
 
         Bukkit.getPluginManager().callEvent(new DWEEventEndEvent(activeEvent, forced));
+        plugin.getEventChainManager().onEventEnd(eventId, forced);
         plugin.getDiscordWebhook().sendEventEnd(activeEvent.getDisplayName());
 
         activeEvent.setActive(false);

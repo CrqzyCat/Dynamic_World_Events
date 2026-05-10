@@ -18,6 +18,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
     private StatisticsManager      statisticsManager;
     private WorldConfigManager     worldConfigManager;
     private SeasonalManager        seasonalManager;
+    private EventChainManager      eventChainManager;
     private EventScheduleManager   eventScheduleManager;
     private EventManager           eventManager;
     private BossBarManager         bossBarManager;
@@ -33,6 +34,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         this.statisticsManager     = new StatisticsManager(this);
         this.worldConfigManager    = new WorldConfigManager(this);
         this.seasonalManager       = new SeasonalManager(this);
+        this.eventChainManager     = new EventChainManager(this);
         this.eventScheduleManager  = new EventScheduleManager(this);
         this.eventManager          = new EventManager(this);
         this.bossBarManager        = new BossBarManager(this);
@@ -58,6 +60,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         if (bossBarManager       != null) bossBarManager.shutdown();
         if (eventScheduler       != null) eventScheduler.stop();
         if (eventScheduleManager != null) eventScheduleManager.stop();
+        if (eventChainManager    != null) eventChainManager.cancelAll();
         if (eventManager         != null) eventManager.stopCurrentEvent(true);
         getLogger().info("DynamicWorldEvents disabled.");
     }
@@ -67,12 +70,14 @@ public final class Dynamic_World_Events extends JavaPlugin {
         bossBarManager.shutdown();
         eventScheduler.stop();
         eventScheduleManager.stop();
+        eventChainManager.cancelAll();
         eventManager.stopCurrentEvent(true);
 
         this.disabledEventsManager = new DisabledEventsManager(this);
         this.statisticsManager     = new StatisticsManager(this);
         this.worldConfigManager    = new WorldConfigManager(this);
         this.seasonalManager       = new SeasonalManager(this);
+        this.eventChainManager     = new EventChainManager(this);
         this.eventScheduleManager  = new EventScheduleManager(this);
         this.eventManager          = new EventManager(this);
         this.bossBarManager        = new BossBarManager(this);
@@ -92,6 +97,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
     public StatisticsManager       getStatisticsManager()        { return statisticsManager; }
     public WorldConfigManager      getWorldConfigManager()       { return worldConfigManager; }
     public SeasonalManager         getSeasonalManager()          { return seasonalManager; }
+    public EventChainManager       getEventChainManager()        { return eventChainManager; }
     public EventScheduleManager    getEventScheduleManager()     { return eventScheduleManager; }
     public EventManager            getEventManager()             { return eventManager; }
     public EventScheduler          getEventScheduler()           { return eventScheduler; }
