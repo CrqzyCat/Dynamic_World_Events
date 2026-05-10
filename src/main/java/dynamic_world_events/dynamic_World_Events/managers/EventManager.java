@@ -1,6 +1,8 @@
 package dynamic_world_events.dynamic_World_Events.managers;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
+import dynamic_world_events.dynamic_World_Events.api.DWEEventEndEvent;
+import dynamic_world_events.dynamic_World_Events.api.DWEEventStartEvent;
 import dynamic_world_events.dynamic_World_Events.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -72,8 +74,16 @@ public class EventManager {
     private boolean startEvent(WorldEvent event) {
         if (activeEvent != null) return false;
 
-        // Use WorldConfigManager to pick the correct world
         World world = plugin.getWorldConfigManager().getEventWorld();
+
+        // Fire Bukkit API event — allow other plugins to cancel
+        DWEEventStartEvent apiEvent = new DWEEventStartEvent(event, world);
+        Bukkit.getPluginManager().callEvent(apiEvent);
+        if (apiEvent.isCancelled()) {
+            plugin.getLogger().info("[DWE API] Event '" + event.getId() + "' was cancelled by another plugin.");
+            return false;
+        }
+
         activeEvent = event;
         secondsRemaining = event.getDurationSeconds();
 
@@ -102,6 +112,7 @@ public class EventManager {
         if (activeEvent == null) return;
         if (tickTask != null) { tickTask.cancel(); tickTask = null; }
 
+        // Record participation stats
         String eventId = activeEvent.getId();
         for (Player p : Bukkit.getOnlinePlayers()) {
             plugin.getStatisticsManager().recordEventParticipation(p.getUniqueId(), p.getName(), eventId);
@@ -109,6 +120,9 @@ public class EventManager {
 
         try { activeEvent.end(forced); }
         catch (Exception ex) { plugin.getLogger().log(Level.WARNING, "Error ending event " + activeEvent.getId(), ex); }
+
+        // Fire Bukkit API end event
+        Bukkit.getPluginManager().callEvent(new DWEEventEndEvent(activeEvent, forced));
 
         plugin.getDiscordWebhook().sendEventEnd(activeEvent.getDisplayName());
 

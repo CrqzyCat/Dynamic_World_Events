@@ -1,5 +1,6 @@
 package dynamic_world_events.dynamic_World_Events;
 
+import dynamic_world_events.dynamic_World_Events.api.DWEApi;
 import dynamic_world_events.dynamic_World_Events.commands.DweCommand;
 import dynamic_world_events.dynamic_World_Events.listeners.PlayerJoinListener;
 import dynamic_world_events.dynamic_World_Events.listeners.StatisticsListener;
@@ -12,6 +13,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
 
     private static Dynamic_World_Events instance;
 
+    private DWEApi                 api;
     private DisabledEventsManager  disabledEventsManager;
     private StatisticsManager      statisticsManager;
     private WorldConfigManager     worldConfigManager;
@@ -34,6 +36,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         this.bossBarManager        = new BossBarManager(this);
         this.eventScheduler        = new EventScheduler(this);
         this.discordWebhook        = new DiscordWebhook(this);
+        this.api                   = new DWEApi(this);
 
         eventScheduler.start();
         eventScheduleManager.start();
@@ -72,6 +75,7 @@ public final class Dynamic_World_Events extends JavaPlugin {
         this.bossBarManager        = new BossBarManager(this);
         this.eventScheduler        = new EventScheduler(this);
         this.discordWebhook        = new DiscordWebhook(this);
+        this.api                   = new DWEApi(this);
 
         eventScheduler.start();
         eventScheduleManager.start();
@@ -80,12 +84,13 @@ public final class Dynamic_World_Events extends JavaPlugin {
     }
 
     public static Dynamic_World_Events getInstance()             { return instance; }
-    public DisabledEventsManager  getDisabledEventsManager()     { return disabledEventsManager; }
-    public StatisticsManager      getStatisticsManager()         { return statisticsManager; }
-    public WorldConfigManager     getWorldConfigManager()        { return worldConfigManager; }
-    public EventScheduleManager   getEventScheduleManager()      { return eventScheduleManager; }
-    public EventManager           getEventManager()              { return eventManager; }
-    public EventScheduler         getEventScheduler()            { return eventScheduler; }
-    public BossBarManager         getBossBarManager()            { return bossBarManager; }
-    public DiscordWebhook         getDiscordWebhook()            { return discordWebhook; }
+    public DWEApi                  getApi()                      { return api; }
+    public DisabledEventsManager   getDisabledEventsManager()    { return disabledEventsManager; }
+    public StatisticsManager       getStatisticsManager()        { return statisticsManager; }
+    public WorldConfigManager      getWorldConfigManager()       { return worldConfigManager; }
+    public EventScheduleManager    getEventScheduleManager()     { return eventScheduleManager; }
+    public EventManager            getEventManager()             { return eventManager; }
+    public EventScheduler          getEventScheduler()           { return eventScheduler; }
+    public BossBarManager          getBossBarManager()           { return bossBarManager; }
+    public DiscordWebhook          getDiscordWebhook()           { return discordWebhook; }
 }
