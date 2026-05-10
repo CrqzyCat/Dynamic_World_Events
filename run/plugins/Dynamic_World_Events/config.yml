@@ -1,0 +1,67 @@
+# ==========================================
+#       Dynamic World Events - Config
+# ==========================================
+
+settings:
+  min-interval-minutes: 20
+  max-interval-minutes: 45
+  min-players: 1
+  warning-seconds: 30
+
+events:
+  meteor:
+    enabled: true
+    weight: 20
+    duration-seconds: 60
+    meteor-count: 5
+    explosion-power: 2.5
+
+  invasion:
+    enabled: true
+    weight: 25
+    duration-seconds: 120
+    mob-count: 15
+    mob-type: ZOMBIE
+    give-armor: true
+    give-weapons: true
+
+  trader_caravan:
+    enabled: true
+    weight: 30
+    duration-seconds: 180
+    trader-count: 3
+
+  drought:
+    enabled: true
+    weight: 15
+    duration-seconds: 300
+    stop-rain: true
+
+  treasure_hunt:
+    enabled: true
+    weight: 10
+    duration-seconds: 240
+    chest-count: 3
+    rewards:
+      - DIAMOND:2
+      - GOLD_INGOT:4
+      - IRON_INGOT:6
+      - EMERALD:2
+      - EXPERIENCE_BOTTLE:3
+
+  blood_moon:
+    enabled: true
+    weight: 8
+    duration-seconds: 600
+
+discord:
+  webhook-url: "YOUR_WEBHOOK_URL_HERE"
+  server-name: "My Server"
+
+messages:
+  prefix: "&8[&6DWE&8] &r"
+  event-warning: "&eWarning! &7An event starts in &e{seconds}s&7!"
+  event-start: "&6&lEvent started: &f{event}"
+  event-end: "&aEvent ended: &f{event}"
+  no-active-event: "&7No active event right now."
+  next-event: "&7Next event in approx. &e{minutes} min&7."

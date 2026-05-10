@@ -65,3 +65,23 @@ messages:
   event-end: "&aEvent ended: &f{event}"
   no-active-event: "&7No active event right now."
   next-event: "&7Next event in approx. &e{minutes} min&7."
+
+  thunderstorm:
+    enabled: true
+    weight: 18
+    duration-seconds: 180
+    # Ticks between lightning strikes (20 ticks = 1 second)
+    strike-interval-ticks: 60
+    # If true, lightning deals damage and can start fires. If false, visual only.
+    damaging-strikes: false
+
+  haunting:
+    enabled: true
+    weight: 12
+    duration-seconds: 240
+    # Phantoms spawned per player at the start
+    phantoms-per-player: 2
+    # Ticks between additional phantom waves
+    spawn-interval-ticks: 100
+    # Phantom size (1 = normal, 2 = large, 3 = huge)
+    phantom-size: 2

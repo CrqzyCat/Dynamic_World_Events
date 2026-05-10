@@ -3,10 +3,6 @@ package dynamic_world_events.dynamic_World_Events.events;
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import org.bukkit.World;
 
-/**
- * Base class for every world event.
- * Extend this and implement start(), end() and onTick().
- */
 public abstract class WorldEvent {
 
     protected final Dynamic_World_Events plugin;
@@ -20,18 +16,9 @@ public abstract class WorldEvent {
         this.displayName = displayName;
     }
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
-
-    /** Called once when the event starts. */
     public abstract void start(World world);
-
-    /** Called once when the event ends. forced = true when stopped via command. */
     public abstract void end(boolean forced);
-
-    /** Called every second while the event is running. */
     public abstract void onTick(int secondsRemaining);
-
-    // ── Config helpers ────────────────────────────────────────────────────────
 
     public int getDurationSeconds() {
         return plugin.getConfig().getInt("events." + id + ".duration-seconds", 120);
@@ -41,11 +28,16 @@ public abstract class WorldEvent {
         return plugin.getConfig().getInt("events." + id + ".weight", 10);
     }
 
+    /**
+     * An event is eligible if BOTH conditions are true:
+     * 1. enabled: true in config.yml
+     * 2. NOT runtime-disabled via /dwe disable
+     */
     public boolean isEnabled() {
-        return plugin.getConfig().getBoolean("events." + id + ".enabled", true);
+        boolean configEnabled  = plugin.getConfig().getBoolean("events." + id + ".enabled", true);
+        boolean runtimeEnabled = !plugin.getDisabledEventsManager().isDisabled(id);
+        return configEnabled && runtimeEnabled;
     }
-
-    // ── Getters ───────────────────────────────────────────────────────────────
 
     public String getId()          { return id; }
     public String getDisplayName() { return displayName; }

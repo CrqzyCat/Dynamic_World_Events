@@ -3,6 +3,7 @@ package dynamic_world_events.dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.commands.DweCommand;
 import dynamic_world_events.dynamic_World_Events.listeners.PlayerJoinListener;
 import dynamic_world_events.dynamic_World_Events.managers.BossBarManager;
+import dynamic_world_events.dynamic_World_Events.managers.DisabledEventsManager;
 import dynamic_world_events.dynamic_World_Events.managers.EventManager;
 import dynamic_world_events.dynamic_World_Events.managers.EventScheduler;
 import dynamic_world_events.dynamic_World_Events.util.DiscordWebhook;
@@ -13,20 +14,22 @@ public final class Dynamic_World_Events extends JavaPlugin {
 
     private static Dynamic_World_Events instance;
 
-    private EventManager   eventManager;
-    private EventScheduler eventScheduler;
-    private BossBarManager bossBarManager;
-    private DiscordWebhook discordWebhook;
+    private DisabledEventsManager disabledEventsManager;
+    private EventManager          eventManager;
+    private BossBarManager        bossBarManager;
+    private EventScheduler        eventScheduler;
+    private DiscordWebhook        discordWebhook;
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
 
-        this.eventManager   = new EventManager(this);
-        this.bossBarManager = new BossBarManager(this);
-        this.eventScheduler = new EventScheduler(this);
-        this.discordWebhook = new DiscordWebhook(this);
+        this.disabledEventsManager = new DisabledEventsManager(this);
+        this.eventManager          = new EventManager(this);
+        this.bossBarManager        = new BossBarManager(this);
+        this.eventScheduler        = new EventScheduler(this);
+        this.discordWebhook        = new DiscordWebhook(this);
 
         eventScheduler.start();
 
@@ -53,18 +56,20 @@ public final class Dynamic_World_Events extends JavaPlugin {
         eventScheduler.stop();
         eventManager.stopCurrentEvent(true);
 
-        this.eventManager   = new EventManager(this);
-        this.bossBarManager = new BossBarManager(this);
-        this.eventScheduler = new EventScheduler(this);
-        this.discordWebhook = new DiscordWebhook(this);
+        this.disabledEventsManager = new DisabledEventsManager(this);
+        this.eventManager          = new EventManager(this);
+        this.bossBarManager        = new BossBarManager(this);
+        this.eventScheduler        = new EventScheduler(this);
+        this.discordWebhook        = new DiscordWebhook(this);
         eventScheduler.start();
 
         getLogger().info("DynamicWorldEvents reloaded.");
     }
 
-    public static Dynamic_World_Events getInstance() { return instance; }
-    public EventManager   getEventManager()   { return eventManager;   }
-    public EventScheduler getEventScheduler() { return eventScheduler; }
-    public BossBarManager getBossBarManager() { return bossBarManager; }
-    public DiscordWebhook getDiscordWebhook() { return discordWebhook; }
+    public static Dynamic_World_Events getInstance()          { return instance; }
+    public DisabledEventsManager getDisabledEventsManager()   { return disabledEventsManager; }
+    public EventManager          getEventManager()            { return eventManager; }
+    public EventScheduler        getEventScheduler()          { return eventScheduler; }
+    public BossBarManager        getBossBarManager()          { return bossBarManager; }
+    public DiscordWebhook        getDiscordWebhook()          { return discordWebhook; }
 }

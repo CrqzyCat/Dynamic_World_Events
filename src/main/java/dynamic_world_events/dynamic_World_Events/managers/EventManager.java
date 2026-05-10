@@ -34,6 +34,8 @@ public class EventManager {
         registeredEvents.add(new DroughtEvent(plugin));
         registeredEvents.add(new TreasureHuntEvent(plugin));
         registeredEvents.add(new BloodMoonEvent(plugin));
+        registeredEvents.add(new ThunderstormEvent(plugin));
+        registeredEvents.add(new HauntingEvent(plugin));
     }
 
     public void registerEvent(WorldEvent event) {

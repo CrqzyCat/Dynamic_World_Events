@@ -1,97 +1,105 @@
-[23:25:13] [ServerMain/INFO]: [bootstrap] Running Java 21 (OpenJDK 64-Bit Server VM 21.0.11+10-LTS; Microsoft Microsoft-13877171) on Windows 11 10.0 (amd64)
-[23:25:13] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21.11-131-ver/1.21.11@6d5b910 (2026-05-03T16:08:07Z) for Minecraft 1.21.11
-[23:25:13] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
-[23:25:14] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Remapping plugin 'C:\Users\crqzycat\IdeaProjects\Dynamic_World_Events\build\libs\Dynamic_World_Events-1.0.0.jar'...
-[23:25:14] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Done remapping plugin 'C:\Users\crqzycat\IdeaProjects\Dynamic_World_Events\build\libs\Dynamic_World_Events-1.0.0.jar' in 276ms.
-[23:25:14] [ServerMain/INFO]: [PluginInitializerManager] Initialized 1 plugin
-[23:25:14] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (1):
+[10:02:02] [ServerMain/INFO]: [bootstrap] Running Java 21 (OpenJDK 64-Bit Server VM 21.0.11+10-LTS; Microsoft Microsoft-13877171) on Windows 11 10.0 (amd64)
+[10:02:02] [ServerMain/INFO]: [bootstrap] Loading Paper 1.21.11-131-ver/1.21.11@6d5b910 (2026-05-03T16:08:07Z) for Minecraft 1.21.11
+[10:02:02] [ServerMain/INFO]: [PluginInitializerManager] Initializing plugins...
+[10:02:02] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Remapping plugin 'C:\Users\crqzycat\IdeaProjects\Dynamic_World_Events\build\libs\Dynamic_World_Events-1.0.0.jar'...
+[10:02:03] [Paper Plugin Remapper Thread - 2/INFO]: [PluginRemapper] Done remapping plugin 'C:\Users\crqzycat\IdeaProjects\Dynamic_World_Events\build\libs\Dynamic_World_Events-1.0.0.jar' in 493ms.
+[10:02:03] [ServerMain/INFO]: [PluginInitializerManager] Initialized 1 plugin
+[10:02:03] [ServerMain/INFO]: [PluginInitializerManager] Bukkit plugins (1):
  - Dynamic_World_Events (1.0.0)
-[23:25:18] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
-[23:25:20] [ServerMain/INFO]: Loaded 1470 recipes
-[23:25:20] [ServerMain/INFO]: Loaded 1584 advancements
-[23:25:20] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
-[23:25:20] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 343.3ms
-[23:25:20] [Server thread/INFO]: Starting minecraft server version 1.21.11
-[23:25:20] [Server thread/INFO]: Loading properties
-[23:25:21] [Server thread/INFO]: This server is running Paper version 1.21.11-131-ver/1.21.11@6d5b910 (2026-05-03T16:08:07Z) (Implementing API version 1.21.11-R0.1-SNAPSHOT)
-[23:25:21] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
-[23:25:21] [Server thread/INFO]: Server Ping Player Sample Count: 12
-[23:25:21] [Server thread/INFO]: Using 4 threads for Netty based IO
-[23:25:21] [Server thread/INFO]: [MoonriseCommon] Paper is using 5 worker threads, 1 I/O threads
-[23:25:21] [Server thread/INFO]: Default game type: SURVIVAL
-[23:25:21] [Server thread/INFO]: Generating keypair
-[23:25:21] [Server thread/INFO]: Starting Minecraft server on *:25565
-[23:25:22] [Server thread/INFO]: Paper: Using Java compression from Velocity.
-[23:25:22] [Server thread/INFO]: Paper: Using Java cipher from Velocity.
-[23:25:22] [Server thread/INFO]: [Dynamic_World_Events] Loading server plugin Dynamic_World_Events v1.0.0
-[23:25:22] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
-[23:25:22] [Server thread/INFO]: Preparing level "world"
-[23:25:22] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:overworld'...
-[23:25:22] [Server thread/INFO]: Preparing spawn area: 100%
-[23:25:22] [Server thread/INFO]: Prepared spawn area in 2 ms
-[23:25:22] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_nether'...
-[23:25:22] [Server thread/INFO]: Prepared spawn area in 0 ms
-[23:25:22] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_end'...
-[23:25:22] [Server thread/INFO]: Prepared spawn area in 0 ms
-[23:25:22] [Server thread/INFO]: Done preparing level "world" (0.506s)
-[23:25:22] [Server thread/INFO]: [Dynamic_World_Events] Enabling Dynamic_World_Events v1.0.0
-[23:25:22] [Server thread/INFO]: [Dynamic_World_Events] Next event in 21m 0s.
-[23:25:22] [Server thread/INFO]: [Dynamic_World_Events] §aDynamicWorldEvents v1.0.0 enabled!
-[23:25:22] [Server thread/INFO]: [spark] Starting background profiler...
-[23:25:22] [Server thread/INFO]: [spark] The async-profiler engine is not supported for your os/arch (windows11/amd64), so the built-in Java engine will be used instead.
-[23:25:22] [Server thread/INFO]: Running delayed init tasks
-[23:25:22] [Server thread/INFO]: Done (10.122s)! For help, type "help"
-[23:25:23] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
-[23:25:23] [Paper Async Task Handler Thread - 1/WARN]: You are running the latest build for your Minecraft version (1.21.11)
-[23:25:23] [Paper Async Task Handler Thread - 1/WARN]: However, you are 2 release(s) behind the latest stable release (26.1.2)!
-[23:25:23] [Paper Async Task Handler Thread - 1/WARN]: It is recommended that you update as soon as possible
-[23:25:23] [Paper Async Task Handler Thread - 1/WARN]: https://papermc.io/downloads/paper
-[23:25:23] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
-[23:25:41] [User Authenticator #0/INFO]: UUID of player Crqzy_Cat is b1b726fb-5546-46b5-bf0b-d4fbaeaf752f
-[23:25:43] [Server thread/INFO]: Crqzy_Cat joined the game
-[23:25:43] [Server thread/INFO]: Crqzy_Cat[/127.0.0.1:52593] logged in with entity id 55 at ([world]-58.64286456387254, 82.0, 5.002648731580833)
-[23:26:10] [Server thread/INFO]: Crqzy_Cat issued server command: /dwe bossbar
-[23:26:17] [Server thread/INFO]: Crqzy_Cat issued server command: /dwe bossbar
-[23:27:03] [Server thread/INFO]: Crqzy_Cat issued server command: /eventstart blood_moon
-[23:27:03] [Server thread/INFO]: [DWE] Ereignis gestartet: Blood Moon
-[23:27:03] [Server thread/INFO]: [DWE] Mobs are stronger and more numerous tonight. Survive until dawn!
-[23:27:18] [Server thread/INFO]: Crqzy_Cat issued server command: /stop
-[23:27:18] [Server thread/INFO]: [Crqzy_Cat: Stopping the server]
-[23:27:18] [Server thread/INFO]: Stopping server
-[23:27:18] [Server thread/INFO]: [Dynamic_World_Events] Disabling Dynamic_World_Events v1.0.0
-[23:27:18] [Server thread/INFO]: [DWE] Ereignis beendet: Blood Moon
-[23:27:18] [Server thread/INFO]: [DWE] Dawn breaks. The Blood Moon is over.
-[23:27:18] [Server thread/INFO]: [Dynamic_World_Events] DynamicWorldEvents disabled.
-[23:27:18] [Server thread/INFO]: Saving players
-[23:27:18] [Server thread/INFO]: Crqzy_Cat lost connection: Server closed
-[23:27:18] [Server thread/INFO]: Crqzy_Cat left the game
-[23:27:18] [Server thread/INFO]: Saving worlds
-[23:27:18] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
-[23:27:18] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
-[23:27:18] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
-[23:27:18] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Saved 725 block chunks, 725 entity chunks, 0 poi chunks in world 'world' in 0.76s
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world'
-[23:27:19] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_nether' in 0.00s
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_nether'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_nether'
-[23:27:19] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_the_end' in 0.00s
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_the_end'
-[23:27:19] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_the_end'
-[23:27:19] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
-[23:27:19] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[23:27:19] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[23:27:19] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
-[23:27:19] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
-[23:27:19] [Server thread/INFO]: All RegionFile I/O tasks to complete
-[23:27:19] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
-[23:27:19] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...
+[10:02:09] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[10:02:11] [ServerMain/INFO]: Loaded 1470 recipes
+[10:02:11] [ServerMain/INFO]: Loaded 1584 advancements
+[10:02:11] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[10:02:12] [ServerMain/INFO]: [ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 404.9ms
+[10:02:12] [Server thread/INFO]: Starting minecraft server version 1.21.11
+[10:02:12] [Server thread/INFO]: Loading properties
+[10:02:12] [Server thread/INFO]: This server is running Paper version 1.21.11-131-ver/1.21.11@6d5b910 (2026-05-03T16:08:07Z) (Implementing API version 1.21.11-R0.1-SNAPSHOT)
+[10:02:12] [Server thread/INFO]: [spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[10:02:12] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[10:02:12] [Server thread/INFO]: Using 4 threads for Netty based IO
+[10:02:13] [Server thread/INFO]: [MoonriseCommon] Paper is using 5 worker threads, 1 I/O threads
+[10:02:13] [Server thread/INFO]: Default game type: SURVIVAL
+[10:02:13] [Server thread/INFO]: Generating keypair
+[10:02:13] [Server thread/INFO]: Starting Minecraft server on *:25565
+[10:02:13] [Server thread/INFO]: Paper: Using Java compression from Velocity.
+[10:02:13] [Server thread/INFO]: Paper: Using Java cipher from Velocity.
+[10:02:13] [Server thread/INFO]: [Dynamic_World_Events] Loading server plugin Dynamic_World_Events v1.0.0
+[10:02:13] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[10:02:13] [Server thread/INFO]: Preparing level "world"
+[10:02:14] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:overworld'...
+[10:02:14] [Server thread/INFO]: Preparing spawn area: 100%
+[10:02:14] [Server thread/INFO]: Prepared spawn area in 2 ms
+[10:02:14] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_nether'...
+[10:02:14] [Server thread/INFO]: Prepared spawn area in 0 ms
+[10:02:14] [Server thread/INFO]: Loading 0 persistent chunks for world 'minecraft:the_end'...
+[10:02:14] [Server thread/INFO]: Prepared spawn area in 0 ms
+[10:02:14] [Server thread/INFO]: Done preparing level "world" (0.565s)
+[10:02:14] [Server thread/INFO]: [Dynamic_World_Events] Enabling Dynamic_World_Events v1.0.0
+[10:02:14] [Server thread/INFO]: [Dynamic_World_Events] Next event in 33m 0s.
+[10:02:14] [Server thread/INFO]: [Dynamic_World_Events] §aDynamicWorldEvents v1.0.0 enabled!
+[10:02:14] [Server thread/INFO]: [spark] Starting background profiler...
+[10:02:14] [Server thread/INFO]: [spark] The async-profiler engine is not supported for your os/arch (windows11/amd64), so the built-in Java engine will be used instead.
+[10:02:14] [Server thread/INFO]: Running delayed init tasks
+[10:02:14] [Server thread/INFO]: Done (13.451s)! For help, type "help"
+[10:02:14] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
+[10:02:14] [Paper Async Task Handler Thread - 1/WARN]: You are running the latest build for your Minecraft version (1.21.11)
+[10:02:14] [Paper Async Task Handler Thread - 1/WARN]: However, you are 2 release(s) behind the latest stable release (26.1.2)!
+[10:02:14] [Paper Async Task Handler Thread - 1/WARN]: It is recommended that you update as soon as possible
+[10:02:14] [Paper Async Task Handler Thread - 1/WARN]: https://papermc.io/downloads/paper
+[10:02:14] [Paper Async Task Handler Thread - 1/WARN]: *************************************************************************************
+[10:02:57] [User Authenticator #0/INFO]: UUID of player Crqzy_Cat is b1b726fb-5546-46b5-bf0b-d4fbaeaf752f
+[10:02:59] [Server thread/INFO]: Crqzy_Cat joined the game
+[10:02:59] [Server thread/INFO]: Crqzy_Cat[/127.0.0.1:53107] logged in with entity id 75 at ([world]-51.271604207539525, 75.0, 28.711857708350788)
+[10:03:03] [Server thread/INFO]: [Crqzy_Cat: Set own game mode to Survival Mode]
+[10:03:30] [Server thread/INFO]: Crqzy_Cat issued server command: /dwe start thunderstorm
+[10:03:30] [Server thread/INFO]: [DWE] Event started: Thunderstorm
+[10:03:30] [Server thread/INFO]: [DWE] A violent storm is rolling in. Seek shelter!
+[10:03:38] [Server thread/INFO]: Crqzy_Cat issued server command: /dwe stop
+[10:03:38] [Server thread/INFO]: [DWE] Event ended: Thunderstorm
+[10:03:38] [Server thread/INFO]: [DWE] The storm has passed.
+[10:03:47] [Server thread/INFO]: [Crqzy_Cat: Set own game mode to Creative Mode]
+[10:03:53] [Server thread/INFO]: [Crqzy_Cat: Set own game mode to Survival Mode]
+[10:04:35] [Server thread/INFO]: Crqzy_Cat issued server command: /dwe start haunting
+[10:04:35] [Server thread/INFO]: [DWE] Event started: Haunting
+[10:04:35] [Server thread/INFO]: [DWE] Something is watching from the darkness...
+[10:04:40] [Server thread/INFO]: Crqzy_Cat issued server command: /dwe stop
+[10:04:40] [Server thread/INFO]: [DWE] Event ended: Haunting
+[10:04:40] [Server thread/INFO]: [DWE] The spirits have retreated. For now.
+[10:06:42] [Server thread/INFO]: Crqzy_Cat issued server command: /stop
+[10:06:42] [Server thread/INFO]: [Crqzy_Cat: Stopping the server]
+[10:06:42] [Server thread/INFO]: Stopping server
+[10:06:42] [Server thread/INFO]: [Dynamic_World_Events] Disabling Dynamic_World_Events v1.0.0
+[10:06:42] [Server thread/INFO]: [Dynamic_World_Events] DynamicWorldEvents disabled.
+[10:06:42] [Server thread/INFO]: Saving players
+[10:06:42] [Server thread/INFO]: Crqzy_Cat lost connection: Server closed
+[10:06:42] [Server thread/INFO]: Crqzy_Cat left the game
+[10:06:42] [Server thread/INFO]: Saving worlds
+[10:06:42] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[10:06:42] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world'
+[10:06:42] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world'
+[10:06:42] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Saved 1410 block chunks, 800 entity chunks, 0 poi chunks in world 'world' in 0.58s
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world'
+[10:06:43] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_nether]'/minecraft:the_nether
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_nether'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_nether'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_nether'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_nether' in 0.00s
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_nether'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_nether'
+[10:06:43] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world_the_end]'/minecraft:the_end
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk system to halt for world 'world_the_end'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Halted chunk system for world 'world_the_end'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Saving all chunkholders for world 'world_the_end'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'world_the_end' in 0.00s
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Waiting 60s for chunk I/O to halt for world 'world_the_end'
+[10:06:43] [Server thread/INFO]: [ChunkHolderManager] Halted I/O scheduler for world 'world_the_end'
+[10:06:43] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[10:06:43] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[10:06:43] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[10:06:43] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
+[10:06:43] [Server thread/INFO]: Waiting for all RegionFile I/O tasks to complete...
+[10:06:43] [Server thread/INFO]: All RegionFile I/O tasks to complete
+[10:06:43] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of worker pool for up to 60s...
+[10:06:43] [Server thread/INFO]: [MoonriseCommon] Awaiting termination of I/O pool for up to 60s...

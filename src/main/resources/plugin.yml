@@ -21,6 +21,9 @@ permissions:
   dwe.admin.stop:
     description: Stop events
     default: op
+  dwe.admin.manage:
+    description: Disable/enable events from the random pool
+    default: op
   dwe.admin.reload:
     description: Reload config
     default: op
