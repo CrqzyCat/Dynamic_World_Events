@@ -92,3 +92,48 @@ messages:
     duration-seconds: 300
     # Double crop drops when harvesting during the event
     double-drops: true
+
+# ==========================================
+#       Fixed Event Schedule (optional)
+# ==========================================
+# If enabled, events fire at specific real-world times every day.
+# The random scheduler still runs alongside this — both are independent.
+# Use "random" as the event ID to trigger a weighted random event.
+schedule:
+  enabled: false
+  entries:
+    - time: "20:00"
+      event: blood_moon
+    - time: "12:00"
+      event: trader_caravan
+    - time: "08:00"
+      event: random
+
+# ==========================================
+#       Per-World Config (optional)
+# ==========================================
+# Configure events per world. If a world has no entry here,
+# all events are allowed using the global settings above.
+#
+# worlds:
+#   world:                        # Main survival world — all events allowed
+#     enabled: true
+#     min-interval-minutes: 15
+#     max-interval-minutes: 30
+#
+#   world_nether:                 # Nether — only invasion and blood moon
+#     enabled: true
+#     allowed-events:
+#       - invasion
+#       - blood_moon
+#
+#   world_the_end:                # End — events disabled entirely
+#     enabled: false
+#
+#   creative_world:               # Creative — no dangerous events
+#     enabled: true
+#     disabled-events:
+#       - invasion
+#       - blood_moon
+#       - meteor
+#       - haunting

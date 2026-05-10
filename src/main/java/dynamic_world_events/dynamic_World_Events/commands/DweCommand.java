@@ -186,6 +186,20 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 }
             }
 
+            case "schedule" -> {
+                if (!sender.hasPermission("dwe.admin.manage")) {
+                    sender.sendMessage(MessageUtil.color(prefix + "0026cNo permission.")); return true;
+                }
+                if (!plugin.getEventScheduleManager().isEnabled()) {
+                    sender.sendMessage(MessageUtil.color(prefix + "00267Schedule is disabled. Enable it in config.yml under schedule.enabled."));
+                    return true;
+                }
+                sender.sendMessage(MessageUtil.color(prefix + "00267Fixed event schedule:"));
+                plugin.getEventScheduleManager().getScheduleSummary().forEach(line ->
+                    sender.sendMessage(MessageUtil.color("  0026e" + line))
+                );
+            }
+
             default -> sendHelp(sender, prefix);
         }
         return true;
@@ -197,6 +211,7 @@ public class DweCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtil.color("&7 /dwe bossbar &8— &fToggle boss bar (player only)"));
         sender.sendMessage(MessageUtil.color("&7 /dwe stats [player] &8— &fView your or another player's stats"));
         sender.sendMessage(MessageUtil.color("&7 /dwe top &8— &fTop 10 event leaderboard"));
+        sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
         if (sender.hasPermission("dwe.admin.start"))
             sender.sendMessage(MessageUtil.color("&7 /dwe start [id] &8— &fStart an event"));
         if (sender.hasPermission("dwe.admin.stop"))
@@ -213,8 +228,9 @@ public class DweCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top"));
-            if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
+            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule"));
+            sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
+        if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
             if (sender.hasPermission("dwe.admin.stop"))   subs.add("stop");
             if (sender.hasPermission("dwe.admin.reload")) subs.add("reload");
             if (sender.hasPermission("dwe.admin.manage")) { subs.add("disable"); subs.add("enable"); subs.add("list"); }

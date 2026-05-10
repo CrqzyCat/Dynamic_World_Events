@@ -2,7 +2,6 @@ package dynamic_world_events.dynamic_World_Events.managers;
 
 import dynamic_world_events.dynamic_World_Events.Dynamic_World_Events;
 import dynamic_world_events.dynamic_World_Events.events.*;
-import dynamic_world_events.dynamic_World_Events.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -73,7 +72,8 @@ public class EventManager {
     private boolean startEvent(WorldEvent event) {
         if (activeEvent != null) return false;
 
-        World world = Bukkit.getWorlds().get(0);
+        // Use WorldConfigManager to pick the correct world
+        World world = plugin.getWorldConfigManager().getEventWorld();
         activeEvent = event;
         secondsRemaining = event.getDurationSeconds();
 
@@ -102,7 +102,6 @@ public class EventManager {
         if (activeEvent == null) return;
         if (tickTask != null) { tickTask.cancel(); tickTask = null; }
 
-        // Record participation for all online players
         String eventId = activeEvent.getId();
         for (Player p : Bukkit.getOnlinePlayers()) {
             plugin.getStatisticsManager().recordEventParticipation(p.getUniqueId(), p.getName(), eventId);

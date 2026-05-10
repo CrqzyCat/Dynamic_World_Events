@@ -29,14 +29,19 @@ public abstract class WorldEvent {
     }
 
     /**
-     * An event is eligible if BOTH conditions are true:
-     * 1. enabled: true in config.yml
-     * 2. NOT runtime-disabled via /dwe disable
+     * Checks all three layers:
+     * 1. config.yml enabled flag
+     * 2. runtime disable via /dwe disable
+     * 3. per-world config for the current event world
      */
     public boolean isEnabled() {
-        boolean configEnabled  = plugin.getConfig().getBoolean("events." + id + ".enabled", true);
-        boolean runtimeEnabled = !plugin.getDisabledEventsManager().isDisabled(id);
-        return configEnabled && runtimeEnabled;
+        if (!plugin.getConfig().getBoolean("events." + id + ".enabled", true)) return false;
+        if (plugin.getDisabledEventsManager().isDisabled(id)) return false;
+
+        World eventWorld = plugin.getWorldConfigManager().getEventWorld();
+        if (!plugin.getWorldConfigManager().isEventAllowedInWorld(eventWorld, id)) return false;
+
+        return true;
     }
 
     public String getId()          { return id; }
