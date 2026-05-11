@@ -227,6 +227,28 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 }
             }
 
+            case "voting" -> {
+                if (!sender.hasPermission("dwe.admin.manage")) {
+                    sender.sendMessage(MessageUtil.color(prefix + "0026cNo permission.")); return true;
+                }
+                if (args.length < 2) {
+                    boolean current = plugin.getConfig().getBoolean("voting.enabled", true);
+                    sender.sendMessage(MessageUtil.color(prefix + "00267Voting is currently: " + (current ? "0026aenabled" : "0026cdisabled")));
+                    sender.sendMessage(MessageUtil.color(prefix + "00267Use 0026f/dwe voting <on|off>00267 to toggle."));
+                    return true;
+                }
+                boolean enable = args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("true");
+                plugin.getConfig().set("voting.enabled", enable);
+                plugin.saveConfig();
+                if (!enable 00260026 plugin.getVotingManager().isVoteActive()) {
+                    plugin.getVotingManager().cancel();
+                    sender.sendMessage(MessageUtil.color(prefix + "0026eActive vote cancelled."));
+                }
+                sender.sendMessage(MessageUtil.color(prefix + (enable
+                    ? "0026aVoting enabled. Players will vote before each event."
+                    : "0026cVoting disabled. Events will start randomly without a vote.")));
+            }
+
             case "history" -> {
                 List<String> hist = plugin.getHistoryManager().getLast(10);
                 if (hist.isEmpty()) {
@@ -287,6 +309,8 @@ public class DweCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtil.color("&7 /dwe stats [player] &8— &fView your or another player's stats"));
         sender.sendMessage(MessageUtil.color("&7 /dwe top &8— &fTop 10 event leaderboard"));
         sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
+if (sender.hasPermission("dwe.admin.manage"))
+            sender.sendMessage(MessageUtil.color("00267 /dwe voting <on|off> 002682014 0026fToggle voting system live"));
         if (sender.hasPermission("dwe.admin.gui"))
             sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));
         if (sender.hasPermission("dwe.admin.manage"))
@@ -307,8 +331,10 @@ public class DweCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season", "vote", "history", "gui", "chains"));
+            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season", "vote", "history", "voting", "gui", "chains"));
             sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
+if (sender.hasPermission("dwe.admin.manage"))
+            sender.sendMessage(MessageUtil.color("00267 /dwe voting <on|off> 002682014 0026fToggle voting system live"));
         if (sender.hasPermission("dwe.admin.gui"))
             sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));
         if (sender.hasPermission("dwe.admin.manage"))
