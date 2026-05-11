@@ -32,6 +32,7 @@ public class DweCommand implements CommandExecutor, TabCompleter {
         switch (args[0].toLowerCase()) {
 
             // ── Player commands ──────────────────────────────────────────────
+
             case "bossbar" -> {
                 if (!(sender instanceof Player player)) {
                     sender.sendMessage(MessageUtil.color(prefix + "&cThis subcommand is player-only."));
@@ -59,7 +60,6 @@ public class DweCommand implements CommandExecutor, TabCompleter {
             }
 
             case "stats" -> {
-                // /dwe stats [player]
                 Player target;
                 if (args.length >= 2) {
                     target = Bukkit.getPlayerExact(args[1]);
@@ -73,10 +73,8 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage(MessageUtil.color(prefix + "&cUsage: /dwe stats <player>"));
                     return true;
                 }
-
                 StatisticsManager sm = plugin.getStatisticsManager();
                 UUID uuid = target.getUniqueId();
-
                 sender.sendMessage(MessageUtil.color(prefix + "&7Stats for &f" + target.getName() + "&7:"));
                 sender.sendMessage(MessageUtil.color("  &7Events participated: &e" + sm.getEventsParticipated(uuid)));
                 sender.sendMessage(MessageUtil.color("  &7Invasion kills: &e" + sm.getInvasionKills(uuid)));
@@ -98,13 +96,99 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                             default -> "&8#" + (i + 1);
                         };
                         sender.sendMessage(MessageUtil.color(
-                            "  " + medal + " &f" + board.get(i).getKey() + " &7— &e" + board.get(i).getValue() + " events"
-                        ));
+                            "  " + medal + " &f" + board.get(i).getKey()
+                            + " &7— &e" + board.get(i).getValue() + " events"));
                     }
                 }
             }
 
+            case "vote" -> {
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(MessageUtil.color(prefix + "&cThis subcommand is player-only."));
+                    return true;
+                }
+                if (!plugin.getVotingManager().isVoteActive()) {
+                    player.sendMessage(MessageUtil.color(prefix + "&7No vote is currently active."));
+                    return true;
+                }
+                if (args.length < 2) {
+                    player.sendMessage(MessageUtil.color(prefix + "&7Voting options:"));
+                    List<WorldEvent> opts = plugin.getVotingManager().getOptions();
+                    for (int i = 0; i < opts.size(); i++) {
+                        player.sendMessage(MessageUtil.color("  &8[&e" + (i + 1) + "&8] &f" + opts.get(i).getDisplayName()));
+                    }
+                    player.sendMessage(MessageUtil.color(prefix + "&7Use &f/dwe vote <number>&7 to vote."));
+                    return true;
+                }
+                try {
+                    int choice = Integer.parseInt(args[1]);
+                    player.sendMessage(MessageUtil.color(plugin.getVotingManager().castVote(player, choice)));
+                } catch (NumberFormatException e) {
+                    player.sendMessage(MessageUtil.color(prefix + "&cPlease enter a number."));
+                }
+            }
+
+            case "history" -> {
+                List<String> hist = plugin.getHistoryManager().getLast(10);
+                if (hist.isEmpty()) {
+                    sender.sendMessage(MessageUtil.color(prefix + "&7No events recorded yet."));
+                } else {
+                    sender.sendMessage(MessageUtil.color(prefix + "&7Last " + hist.size() + " events:"));
+                    hist.forEach(line -> sender.sendMessage(MessageUtil.color("  &8" + line)));
+                }
+            }
+
+            case "season" -> {
+                String activeSeason = plugin.getSeasonalManager().getActiveSeason();
+                if (activeSeason == null) {
+                    sender.sendMessage(MessageUtil.color(prefix + "&7No seasonal modifier active right now."));
+                } else {
+                    sender.sendMessage(MessageUtil.color(prefix + "&aActive season: &f" + activeSeason));
+                    plugin.getSeasonalManager().getActiveModifiers().forEach((id, mult) -> {
+                        String arrow = mult >= 1.0 ? "&a↑" : "&c↓";
+                        sender.sendMessage(MessageUtil.color("  &f" + id + " &8— " + arrow + " &f" + String.format("%.1fx", mult)));
+                    });
+                }
+            }
+
+            case "schedule" -> {
+                if (!sender.hasPermission("dwe.admin.manage")) {
+                    sender.sendMessage(MessageUtil.color(prefix + "&cNo permission.")); return true;
+                }
+                if (!plugin.getEventScheduleManager().isEnabled()) {
+                    sender.sendMessage(MessageUtil.color(prefix + "&7Schedule is disabled. Enable it in config.yml under schedule.enabled."));
+                    return true;
+                }
+                sender.sendMessage(MessageUtil.color(prefix + "&7Fixed event schedule:"));
+                plugin.getEventScheduleManager().getScheduleSummary()
+                    .forEach(line -> sender.sendMessage(MessageUtil.color("  &e" + line)));
+            }
+
+            case "voting" -> {
+                if (!sender.hasPermission("dwe.admin.manage")) {
+                    sender.sendMessage(MessageUtil.color(prefix + "&cNo permission.")); return true;
+                }
+                if (args.length < 2) {
+                    boolean current = plugin.getConfig().getBoolean("voting.enabled", true);
+                    sender.sendMessage(MessageUtil.color(prefix + "&7Voting is currently: "
+                        + (current ? "&aenabled" : "&cdisabled")));
+                    sender.sendMessage(MessageUtil.color(prefix + "&7Use &f/dwe voting <on|off>&7 to toggle."));
+                    return true;
+                }
+                boolean enable = args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("true");
+                plugin.getConfig().set("voting.enabled", enable);
+                plugin.saveConfig();
+                if (!enable && plugin.getVotingManager().isVoteActive()) {
+                    plugin.getVotingManager().cancel();
+                    sender.sendMessage(MessageUtil.color(prefix + "&eActive vote cancelled."));
+                }
+                sender.sendMessage(MessageUtil.color(prefix + (enable
+                    ? "&aVoting enabled. Players will vote before each event."
+                    : "&cVoting disabled. Events will start randomly without a vote.")));
+            }
+
             // ── Admin commands ───────────────────────────────────────────────
+
             case "start" -> {
                 if (!sender.hasPermission("dwe.admin.start")) {
                     sender.sendMessage(MessageUtil.color(prefix + "&cNo permission.")); return true;
@@ -187,98 +271,13 @@ public class DweCommand implements CommandExecutor, TabCompleter {
                 }
             }
 
-            case "schedule" -> {
-                if (!sender.hasPermission("dwe.admin.manage")) {
-                    sender.sendMessage(MessageUtil.color(prefix + "0026cNo permission.")); return true;
-                }
-                if (!plugin.getEventScheduleManager().isEnabled()) {
-                    sender.sendMessage(MessageUtil.color(prefix + "00267Schedule is disabled. Enable it in config.yml under schedule.enabled."));
-                    return true;
-                }
-                sender.sendMessage(MessageUtil.color(prefix + "00267Fixed event schedule:"));
-                plugin.getEventScheduleManager().getScheduleSummary().forEach(line ->
-                    sender.sendMessage(MessageUtil.color("  0026e" + line))
-                );
-            }
-
-            case "vote" -> {
-                if (!(sender instanceof Player player)) {
-                    sender.sendMessage(MessageUtil.color(prefix + "0026cThis subcommand is player-only."));
-                    return true;
-                }
-                if (!plugin.getVotingManager().isVoteActive()) {
-                    player.sendMessage(MessageUtil.color(prefix + "00267No vote is currently active."));
-                    return true;
-                }
-                if (args.length < 2) {
-                    player.sendMessage(MessageUtil.color(prefix + "00267Voting options:"));
-                    List<dynamic_world_events.dynamic_World_Events.events.WorldEvent> opts = plugin.getVotingManager().getOptions();
-                    for (int i = 0; i < opts.size(); i++) {
-                        player.sendMessage(MessageUtil.color("  00268[0026e" + (i + 1) + "00268] 0026f" + opts.get(i).getDisplayName()));
-                    }
-                    player.sendMessage(MessageUtil.color(prefix + "00267Use 0026f/dwe vote <number>00267 to vote."));
-                    return true;
-                }
-                try {
-                    int choice = Integer.parseInt(args[1]);
-                    player.sendMessage(MessageUtil.color(plugin.getVotingManager().castVote(player, choice)));
-                } catch (NumberFormatException e) {
-                    player.sendMessage(MessageUtil.color(prefix + "0026cPlease enter a number."));
-                }
-            }
-
-            case "voting" -> {
-                if (!sender.hasPermission("dwe.admin.manage")) {
-                    sender.sendMessage(MessageUtil.color(prefix + "0026cNo permission.")); return true;
-                }
-                if (args.length < 2) {
-                    boolean current = plugin.getConfig().getBoolean("voting.enabled", true);
-                    sender.sendMessage(MessageUtil.color(prefix + "00267Voting is currently: " + (current ? "0026aenabled" : "0026cdisabled")));
-                    sender.sendMessage(MessageUtil.color(prefix + "00267Use 0026f/dwe voting <on|off>00267 to toggle."));
-                    return true;
-                }
-                boolean enable = args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("true");
-                plugin.getConfig().set("voting.enabled", enable);
-                plugin.saveConfig();
-                if (!enable 00260026 plugin.getVotingManager().isVoteActive()) {
-                    plugin.getVotingManager().cancel();
-                    sender.sendMessage(MessageUtil.color(prefix + "0026eActive vote cancelled."));
-                }
-                sender.sendMessage(MessageUtil.color(prefix + (enable
-                    ? "0026aVoting enabled. Players will vote before each event."
-                    : "0026cVoting disabled. Events will start randomly without a vote.")));
-            }
-
-            case "history" -> {
-                List<String> hist = plugin.getHistoryManager().getLast(10);
-                if (hist.isEmpty()) {
-                    sender.sendMessage(MessageUtil.color(prefix + "00267No events recorded yet."));
-                } else {
-                    sender.sendMessage(MessageUtil.color(prefix + "00267Last " + hist.size() + " events:"));
-                    hist.forEach(line -> sender.sendMessage(MessageUtil.color("  00268" + line)));
-                }
-            }
-
-            case "season" -> {
-                String activeSeason = plugin.getSeasonalManager().getActiveSeason();
-                if (activeSeason == null) {
-                    sender.sendMessage(MessageUtil.color(prefix + "00267No seasonal modifier active right now."));
-                } else {
-                    sender.sendMessage(MessageUtil.color(prefix + "0026aActive season: 0026f" + activeSeason));
-                    plugin.getSeasonalManager().getActiveModifiers().forEach((id, mult) -> {
-                        String arrow = mult >= 1.0 ? "0026a2191" : "0026c2193";
-                        sender.sendMessage(MessageUtil.color("  0026f" + id + " 002682014 " + arrow + " 0026f" + String.format("%.1fx", mult)));
-                    });
-                }
-            }
-
             case "gui" -> {
                 if (!(sender instanceof Player player)) {
-                    sender.sendMessage(MessageUtil.color(prefix + "0026cThis subcommand is player-only."));
+                    sender.sendMessage(MessageUtil.color(prefix + "&cThis subcommand is player-only."));
                     return true;
                 }
                 if (!player.hasPermission("dwe.admin.gui")) {
-                    player.sendMessage(MessageUtil.color(prefix + "0026cNo permission."));
+                    player.sendMessage(MessageUtil.color(prefix + "&cNo permission."));
                     return true;
                 }
                 new EventManagerGui(plugin, player);
@@ -286,14 +285,15 @@ public class DweCommand implements CommandExecutor, TabCompleter {
 
             case "chains" -> {
                 if (!sender.hasPermission("dwe.admin.manage")) {
-                    sender.sendMessage(MessageUtil.color(prefix + "0026cNo permission.")); return true;
+                    sender.sendMessage(MessageUtil.color(prefix + "&cNo permission.")); return true;
                 }
                 var pending = plugin.getEventChainManager().getPendingChains();
                 if (pending.isEmpty()) {
-                    sender.sendMessage(MessageUtil.color(prefix + "00267No pending event chains."));
+                    sender.sendMessage(MessageUtil.color(prefix + "&7No pending event chains."));
                 } else {
-                    sender.sendMessage(MessageUtil.color(prefix + "00267Pending chains:"));
-                    pending.keySet().forEach(id -> sender.sendMessage(MessageUtil.color("  0026e23f3 0026f" + id)));
+                    sender.sendMessage(MessageUtil.color(prefix + "&7Pending chains:"));
+                    pending.keySet().forEach(id ->
+                        sender.sendMessage(MessageUtil.color("  &e⏳ &f" + id)));
                 }
             }
 
@@ -306,64 +306,90 @@ public class DweCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(MessageUtil.color(prefix + "&7Available commands:"));
         sender.sendMessage(MessageUtil.color("&7 /dwe events &8— &fShow active event info"));
         sender.sendMessage(MessageUtil.color("&7 /dwe bossbar &8— &fToggle boss bar (player only)"));
-        sender.sendMessage(MessageUtil.color("&7 /dwe stats [player] &8— &fView your or another player's stats"));
-        sender.sendMessage(MessageUtil.color("&7 /dwe top &8— &fTop 10 event leaderboard"));
-        sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
-if (sender.hasPermission("dwe.admin.manage"))
-            sender.sendMessage(MessageUtil.color("00267 /dwe voting <on|off> 002682014 0026fToggle voting system live"));
-        if (sender.hasPermission("dwe.admin.gui"))
-            sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));
-        if (sender.hasPermission("dwe.admin.manage"))
-            sender.sendMessage(MessageUtil.color("00267 /dwe chains 002682014 0026fView pending event chains"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe stats [player] &8— &fView event stats"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe top &8— &fTop 10 leaderboard"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe vote [number] &8— &fVote for the next event"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe history &8— &fLast 10 events with timestamps"));
+        sender.sendMessage(MessageUtil.color("&7 /dwe season &8— &fShow active seasonal modifiers"));
+        if (sender.hasPermission("dwe.admin.manage")) {
+            sender.sendMessage(MessageUtil.color("&7 /dwe voting <on|off> &8— &fToggle voting system live"));
+            sender.sendMessage(MessageUtil.color("&7 /dwe schedule &8— &fView the fixed event schedule"));
+            sender.sendMessage(MessageUtil.color("&7 /dwe disable <id> &8— &fDisable an event from the pool"));
+            sender.sendMessage(MessageUtil.color("&7 /dwe enable <id> &8— &fRe-enable a disabled event"));
+            sender.sendMessage(MessageUtil.color("&7 /dwe list &8— &fList all events and their status"));
+            sender.sendMessage(MessageUtil.color("&7 /dwe chains &8— &fView pending event chains"));
+        }
         if (sender.hasPermission("dwe.admin.start"))
             sender.sendMessage(MessageUtil.color("&7 /dwe start [id] &8— &fStart an event"));
         if (sender.hasPermission("dwe.admin.stop"))
             sender.sendMessage(MessageUtil.color("&7 /dwe stop &8— &fStop current event"));
         if (sender.hasPermission("dwe.admin.reload"))
             sender.sendMessage(MessageUtil.color("&7 /dwe reload &8— &fReload config"));
-        if (sender.hasPermission("dwe.admin.manage")) {
-            sender.sendMessage(MessageUtil.color("&7 /dwe disable <id> &8— &fDisable an event from the pool"));
-            sender.sendMessage(MessageUtil.color("&7 /dwe enable <id> &8— &fRe-enable a disabled event"));
-            sender.sendMessage(MessageUtil.color("&7 /dwe list &8— &fList all events and their status"));
-        }
+        if (sender.hasPermission("dwe.admin.gui"))
+            sender.sendMessage(MessageUtil.color("&7 /dwe gui &8— &fOpen the event manager GUI"));
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            List<String> subs = new ArrayList<>(Arrays.asList("events", "bossbar", "stats", "top", "schedule", "season", "vote", "history", "voting", "gui", "chains"));
-            sender.sendMessage(MessageUtil.color("0026e /dwe schedule 002682014 0026fView the fixed event schedule"));
-if (sender.hasPermission("dwe.admin.manage"))
-            sender.sendMessage(MessageUtil.color("00267 /dwe voting <on|off> 002682014 0026fToggle voting system live"));
-        if (sender.hasPermission("dwe.admin.gui"))
-            sender.sendMessage(MessageUtil.color("00266 /dwe gui 002682014 0026fOpen the event manager GUI"));
-        if (sender.hasPermission("dwe.admin.manage"))
-            sender.sendMessage(MessageUtil.color("00267 /dwe chains 002682014 0026fView pending event chains"));
-        if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
+            List<String> subs = new ArrayList<>(Arrays.asList(
+                "events", "bossbar", "stats", "top", "vote", "history", "season"));
+            if (sender.hasPermission("dwe.admin.manage")) {
+                subs.addAll(Arrays.asList("voting", "schedule", "disable", "enable", "list", "chains"));
+            }
+            if (sender.hasPermission("dwe.admin.start"))  subs.add("start");
             if (sender.hasPermission("dwe.admin.stop"))   subs.add("stop");
             if (sender.hasPermission("dwe.admin.reload")) subs.add("reload");
-            if (sender.hasPermission("dwe.admin.manage")) { subs.add("disable"); subs.add("enable"); subs.add("list"); }
+            if (sender.hasPermission("dwe.admin.gui"))    subs.add("gui");
             return subs.stream().filter(s -> s.startsWith(args[0].toLowerCase())).collect(Collectors.toList());
         }
+
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("start") && sender.hasPermission("dwe.admin.start")) {
-                return plugin.getEventManager().getRegisteredEvents().stream()
-                    .map(WorldEvent::getId).filter(id -> id.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
-            }
-            if (args[0].equalsIgnoreCase("disable") && sender.hasPermission("dwe.admin.manage")) {
-                return plugin.getEventManager().getRegisteredEvents().stream()
-                    .filter(e -> !plugin.getDisabledEventsManager().isDisabled(e.getId()))
-                    .map(WorldEvent::getId).filter(id -> id.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
-            }
-            if (args[0].equalsIgnoreCase("enable") && sender.hasPermission("dwe.admin.manage")) {
-                return plugin.getDisabledEventsManager().getDisabledIds().stream()
-                    .filter(id -> id.startsWith(args[1].toLowerCase())).collect(Collectors.toList());
-            }
-            if (args[0].equalsIgnoreCase("stats")) {
-                return Bukkit.getOnlinePlayers().stream()
-                    .map(Player::getName).filter(n -> n.startsWith(args[1])).collect(Collectors.toList());
+            switch (args[0].toLowerCase()) {
+                case "start" -> {
+                    if (sender.hasPermission("dwe.admin.start"))
+                        return plugin.getEventManager().getRegisteredEvents().stream()
+                            .map(WorldEvent::getId)
+                            .filter(id -> id.startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
+                }
+                case "disable" -> {
+                    if (sender.hasPermission("dwe.admin.manage"))
+                        return plugin.getEventManager().getRegisteredEvents().stream()
+                            .filter(e -> !plugin.getDisabledEventsManager().isDisabled(e.getId()))
+                            .map(WorldEvent::getId)
+                            .filter(id -> id.startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
+                }
+                case "enable" -> {
+                    if (sender.hasPermission("dwe.admin.manage"))
+                        return plugin.getDisabledEventsManager().getDisabledIds().stream()
+                            .filter(id -> id.startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
+                }
+                case "voting" -> {
+                    if (sender.hasPermission("dwe.admin.manage"))
+                        return Arrays.asList("on", "off").stream()
+                            .filter(s -> s.startsWith(args[1].toLowerCase()))
+                            .collect(Collectors.toList());
+                }
+                case "stats" -> {
+                    return Bukkit.getOnlinePlayers().stream()
+                        .map(Player::getName)
+                        .filter(n -> n.toLowerCase().startsWith(args[1].toLowerCase()))
+                        .collect(Collectors.toList());
+                }
+                case "vote" -> {
+                    if (plugin.getVotingManager().isVoteActive()) {
+                        List<String> nums = new ArrayList<>();
+                        for (int i = 1; i <= plugin.getVotingManager().getOptions().size(); i++)
+                            nums.add(String.valueOf(i));
+                        return nums;
+                    }
+                }
             }
         }
+
         return Collections.emptyList();
     }
 }
